@@ -1,10 +1,10 @@
 package com.bcs.trainingwebsite.infrastructure;
 
-import ee.bcs.bank37back.infrastructure.error.ApiError;
-import ee.bcs.bank37back.infrastructure.exception.DataNotFoundException;
-import ee.bcs.bank37back.infrastructure.exception.ForbiddenException;
-import ee.bcs.bank37back.infrastructure.exception.ForeignKeyNotFoundException;
-import ee.bcs.bank37back.infrastructure.exception.PrimaryKeyNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.error.ApiError;
+import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
+import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.exception.PrimaryKeyNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
