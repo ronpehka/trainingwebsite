@@ -1,8 +1,6 @@
 package com.bcs.trainingwebsite.service;
 
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
-import com.bcs.trainingwebsite.infrastructure.error.Error;
-import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileMapper;
@@ -15,8 +13,6 @@ import com.bcs.trainingwebsite.persistance.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILABLE;
 
 @Service
@@ -24,6 +20,7 @@ import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILAB
 public class RegistrationService {
 
 
+    public static final int CUSTOMER = 3;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
@@ -31,18 +28,29 @@ public class RegistrationService {
     private final ProfileMapper profileMapper;
 
     public void addNewCustomer(CustomerProfile customerProfile) {
-        boolean userExists = userRepository.existsByEmail(customerProfile.getEmail());
+        validateEmailIsAvailable(customerProfile.getEmail());
+        User user = createAndSaveUser(customerProfile);
+        createAndSaveProfile(customerProfile, user);
+    }
+
+    private void createAndSaveProfile(CustomerProfile customerProfile, User user) {
+        Profile profile = profileMapper.toProfile(customerProfile);
+        profile.setUser(user);
+        profileRepository.save(profile);
+    }
+
+    private User createAndSaveUser(CustomerProfile customerProfile) {
+        Role roleCustomer = roleRepository.findById(CUSTOMER).get();
+        User user = userMapper.toUser(customerProfile);
+        user.setRole(roleCustomer);
+        userRepository.save(user);
+        return user;
+    }
+
+    private void validateEmailIsAvailable(String email) {
+        boolean userExists = userRepository.existsByEmail(email);
         if (userExists) {
             throw new ForbiddenException(EMAIL_UNAVAILABLE.getMessage(), EMAIL_UNAVAILABLE.getErrorCode());
         }
-        String password = customerProfile.getPassword();
-        User user = userMapper.toUser(customerProfile);
-        Role role = roleRepository.findById(3).orElseThrow(() -> new DataNotFoundException(Error.NO_ATM_LOCATIONS_FOUND.getMessage(), Error.NO_ATM_LOCATIONS_FOUND.getErrorCode()));
-        user.setRole(role);
-        user.setPassword(password);
-        userRepository.save(user);
-        Profile profile = profileMapper.toProfile(customerProfile);
-        profileRepository.save(profile);
-
     }
 }

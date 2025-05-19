@@ -15,7 +15,7 @@ public class RegistrationController {
 
     @PostMapping("/customer-registration")
     public void addNewCustomer(@RequestBody CustomerProfile customerProfile) {
-
         registrationService.addNewCustomer(customerProfile);
     }
+
 }

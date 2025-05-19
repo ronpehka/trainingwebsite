@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.persistance.user;
 
+
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.login.dto.LoginResponse;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
@@ -15,6 +16,7 @@ public interface UserMapper {
 
     @Mapping(source="email",target = "email")
     @Mapping(source="password",target = "password")
-    @Mapping(expression = "java(Status.Active.getCode())", target = "status")
+    @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     User toUser(CustomerProfile customerProfile);
+
 }
