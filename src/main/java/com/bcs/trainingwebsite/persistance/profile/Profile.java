@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
@@ -44,6 +46,10 @@ public class Profile {
     @NotNull
     @Column(name = "phone", nullable = false)
     private String phone;
+
+    @NotNull
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
 
     @Column(name = "gender", length = Integer.MAX_VALUE)
     private String gender;

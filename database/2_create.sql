@@ -56,6 +56,7 @@ CREATE TABLE profile (
                          description varchar(500)  NULL,
                          email varchar(255)  NULL,
                          phone varchar(255)  NOT NULL,
+                         date_of_birth date NOT NULL ,
                          gender char(1)  NULL,
                          CONSTRAINT profile_pk PRIMARY KEY (id)
 );
