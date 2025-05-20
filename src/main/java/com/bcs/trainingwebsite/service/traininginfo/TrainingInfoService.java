@@ -1,14 +1,26 @@
 package com.bcs.trainingwebsite.service.traininginfo;
 
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
+import com.bcs.trainingwebsite.controller.traininginfo.dto.WeekdayDto;
+import com.bcs.trainingwebsite.infrastructure.error.Error;
+import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
+import com.bcs.trainingwebsite.persistance.profile.Profile;
+import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
+import com.bcs.trainingwebsite.persistance.role.Role;
+import com.bcs.trainingwebsite.persistance.role.RoleRepository;
 import com.bcs.trainingwebsite.persistance.sport.SportRepository;
 import com.bcs.trainingwebsite.persistance.training.Training;
 import com.bcs.trainingwebsite.persistance.training.TrainingMapper;
 import com.bcs.trainingwebsite.persistance.training.TrainingRepository;
+import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekday;
+import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayRepository;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
+import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,14 +30,40 @@ public class TrainingInfoService {
 
     private final TrainingRepository trainingRepository;
     private final TrainingMapper trainingMapper;
-    private final SportRepository sportRepository;
+    private final ProfileRepository profileRepository;
+    private final TrainingWeekdayRepository trainingWeekdayRepository;
+    private final WeekdayMapper weekdayMapper;
 
     public List<TrainingInfo> getAllTrainingInfo() {
         List<Training> trainings = trainingRepository.findAll();
+        List<TrainingInfo> trainingInfos = new ArrayList<>();
+        getCorrectTrainingInfo(trainings, trainingInfos);
+        return trainingInfos;
+    }
 
-        sportRepository.findById()
+    private void getCorrectTrainingInfo(List<Training> trainings, List<TrainingInfo> trainingInfos) {
+        for (Training training : trainings) {
+            TrainingInfo trainingInfo = trainingMapper.toTrainingInfo(training);
+            getCoachName(training, trainingInfo);
+            getWeekDays(training, trainingInfo);
+            trainingInfos.add(trainingInfo);
+        }
+    }
 
+    private void getWeekDays(Training training, TrainingInfo trainingInfo) {
+        List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdayBy(training.getId());
+        List<WeekdayDto> weekdayDtos = trainingWeekdays.stream()
+                .map(tw -> weekdayMapper.toWeekdayDto(tw.getWeekday())).toList();
+        trainingInfo.setWeekdays(weekdayDtos);
+    }
 
-        return trainingMapper.toTrainingInfos(trainings);
+    private void getCoachName(Training training, TrainingInfo trainingInfo) {
+        Profile profile = getCorrectCoach(training);
+        trainingInfo.setCoachName(profile.getFirstName() + " " + profile.getLastName());
+    }
+
+    private Profile getCorrectCoach(Training training) {
+        return profileRepository.findById(training.getCoachUser()
+                .getId()).orElseThrow(() -> new ForeignKeyNotFoundException("CoachUser", training.getCoachUser().getId()));
     }
 }

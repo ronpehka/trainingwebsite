@@ -19,8 +19,18 @@ INSERT INTO training."user" (id, role_id, email, password, status) VALUES (defau
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client@client.ee', '123', 'A');
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client2@client.ee', '123', 'D');
 
-INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone,date_of_birth, gender) VALUES (default, 3, 'Jaan', 'Uss', null, 'client@client.ee', '44444433', '20/11/1998','M');
-INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone,date_of_birth, gender) VALUES (default, 2, 'Nipi', 'Tiri', 'Ma olen ülikõva treener', 'coach@coach.ee', '112', '20/06/1993','N');
+INSERT INTO training.profile (
+    id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender
+) VALUES (
+             default, 3, 'Jaan', 'Uss', null, 'client@client.ee', '44444433', '1998-11-20', 'M'
+         );
+
+INSERT INTO training.profile (
+    id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender
+) VALUES (
+             default, 2, 'Nipi', 'Tiri', 'Ma olen ülikõva treener', 'coach@coach.ee', '112', '1993-06-20', 'N'
+         );
+
 
 INSERT INTO training.district (id, name) VALUES (1, 'Haabersti');
 INSERT INTO training.district (id, name) VALUES (2, 'Kesklinn');

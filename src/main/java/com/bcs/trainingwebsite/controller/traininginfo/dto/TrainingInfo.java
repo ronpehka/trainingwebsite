@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.controller.traininginfo.dto;
 
+import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekday;
 import com.bcs.trainingwebsite.persistance.weekday.Weekday;
 import lombok.Data;
 
@@ -15,11 +16,10 @@ public class TrainingInfo {
     private String gender;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<Weekday> weekdays;
+    private List<WeekdayDto> weekdays;
     private LocalTime startTime;
     private LocalTime endTime;
     private String sportType;
     private Integer maxLimit;
-
 
 }
