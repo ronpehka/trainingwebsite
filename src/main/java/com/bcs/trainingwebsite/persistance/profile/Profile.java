@@ -43,7 +43,6 @@ public class Profile {
     private String email;
 
     @Size(max = 255)
-    @NotNull
     @Column(name = "phone", nullable = false)
     private String phone;
 
