@@ -48,7 +48,7 @@ public class RegistrationService {
     }
 
     private void createAndSaveCoachProfile(CoachProfile coachProfile, User user) {
-        Profile profile = profileMapper.toCoachProfile(coachProfile);
+        Profile profile = profileMapper.toProfile(coachProfile);
         profile.setUser(user);
         profileRepository.save(profile);
     }

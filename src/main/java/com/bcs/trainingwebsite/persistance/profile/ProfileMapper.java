@@ -18,7 +18,7 @@ public interface ProfileMapper {
     @InheritConfiguration(name = "toProfile")
     @Mapping(source = "phoneNumber", target = "phone")
     @Mapping(source = "description", target = "description")
-    Profile toCoachProfile(CoachProfile coachProfile);
+    Profile toProfile(CoachProfile coachProfile);
 
 
 }
