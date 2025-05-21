@@ -19,6 +19,8 @@ public class TrainingInfo {
     private List<WeekdayDto> weekdays;
     private LocalTime startTime;
     private LocalTime endTime;
+    private String locationName;
+    private String address;
     private String sportType;
     private Integer maxLimit;
 
