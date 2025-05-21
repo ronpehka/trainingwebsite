@@ -3,6 +3,6 @@ package com.bcs.trainingwebsite.controller.traininginfo.dto;
 import lombok.Data;
 
 @Data
-public class WeekdayDto {
+public class TrainingDay {
     private String weekday;
 }

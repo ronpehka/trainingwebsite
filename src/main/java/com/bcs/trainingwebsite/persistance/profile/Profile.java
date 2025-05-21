@@ -54,4 +54,8 @@ public class Profile {
     @Column(name = "gender", length = Integer.MAX_VALUE)
     private String gender;
 
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
+
 }
