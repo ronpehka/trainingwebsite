@@ -37,4 +37,10 @@ public class User {
     @Column(name = "status", nullable = false, length = 1)
     private String status;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
 }

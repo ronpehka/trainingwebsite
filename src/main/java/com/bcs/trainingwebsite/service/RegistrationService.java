@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.service;
 
+import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
@@ -26,15 +27,27 @@ public class RegistrationService {
     private final RoleRepository roleRepository;
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
+    private static final int COACH = 2;
 
     public void addNewCustomer(CustomerProfile customerProfile) {
         validateEmailIsAvailable(customerProfile.getEmail());
         User user = createAndSaveUser(customerProfile);
         createAndSaveProfile(customerProfile, user);
     }
+    public void addNewCoach(CoachProfile coachProfile) {
+        validateEmailIsAvailable(coachProfile.getEmail());
+        User user = createAndSaveUser(coachProfile);
+        createAndSaveCoachProfile(coachProfile, user);
+    }
 
     private void createAndSaveProfile(CustomerProfile customerProfile, User user) {
         Profile profile = profileMapper.toProfile(customerProfile);
+        profile.setUser(user);
+        profileRepository.save(profile);
+    }
+
+    private void createAndSaveCoachProfile(CoachProfile coachProfile, User user) {
+        Profile profile = profileMapper.toCoachProfile(coachProfile);
         profile.setUser(user);
         profileRepository.save(profile);
     }
@@ -46,6 +59,18 @@ public class RegistrationService {
         userRepository.save(user);
         return user;
     }
+
+
+
+    private User createAndSaveUser(CoachProfile coachProfile) {
+        Role roleCoach = roleRepository.findById(COACH).get();
+        User user = userMapper.toUser(coachProfile);
+        user.setRole(roleCoach);
+        userRepository.save(user);
+        return user;
+    }
+
+
 
     private void validateEmailIsAvailable(String email) {
         boolean userExists = userRepository.existsByEmail(email);

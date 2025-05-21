@@ -3,6 +3,7 @@ package com.bcs.trainingwebsite.persistance.user;
 
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.login.dto.LoginResponse;
+import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import org.mapstruct.*;
 
@@ -18,5 +19,10 @@ public interface UserMapper {
     @Mapping(source="password",target = "password")
     @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     User toUser(CustomerProfile customerProfile);
+
+    @InheritConfiguration(name = "toUser")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
+    User toUser(CoachProfile coachProfile);
 
 }

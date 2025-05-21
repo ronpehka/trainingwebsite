@@ -178,6 +178,7 @@ ALTER TABLE location_image ADD CONSTRAINT location_image_location
             INITIALLY IMMEDIATE
 ;
 
+
 -- Reference: mailbox_user_receiver (table: mailbox)
 ALTER TABLE mailbox ADD CONSTRAINT mailbox_user_receiver
     FOREIGN KEY (receiver_user_id)
