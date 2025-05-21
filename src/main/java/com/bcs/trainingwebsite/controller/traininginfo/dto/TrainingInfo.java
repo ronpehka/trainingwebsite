@@ -17,8 +17,8 @@ public class TrainingInfo {
     private List<TrainingDay> trainingDays;
     private String startTime;
     private String endTime;
-    private String locationName;
-    private String address;
+    private String locationName;//""
+    private String address;//""
     private String sportType;
     private Integer maxLimit;
 

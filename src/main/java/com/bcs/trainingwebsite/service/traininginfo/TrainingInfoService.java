@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.service.traininginfo;
 
+import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.persistance.location.Location;
@@ -35,7 +36,7 @@ public class TrainingInfoService {
     private final TrainingWeekdayMapper trainingWeekdayMapper;
 
     public List<TrainingInfo> getAllTrainingInfo() {
-        List<Training> trainings = trainingRepository.findAll();
+        List<Training> trainings = trainingRepository.findTrainingsBy(Status.ACTIVE.getCode());
         List<TrainingInfo> trainingInfos = trainingMapper.toTrainingInfos(trainings);
         addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
