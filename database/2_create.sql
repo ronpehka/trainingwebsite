@@ -150,7 +150,7 @@ CREATE TABLE weekday (
 -- Table: coach_image
 CREATE TABLE coach_image (
                                 id serial  NOT NULL,
-                                coach_id int  NOT NULL,
+                                user_id int  NOT NULL,
                                 data bytea  NOT NULL,
                                 CONSTRAINT coach_image_pk PRIMARY KEY (id)
 );
@@ -168,7 +168,7 @@ ALTER TABLE coach_sport ADD CONSTRAINT coach_sport_sport
 
 -- Reference: coach_image (table: coach_image)
 ALTER TABLE coach_image ADD CONSTRAINT coach_image
-    FOREIGN KEY (coach_id)
+    FOREIGN KEY (user_id)
         REFERENCES coach_image (id)
         NOT DEFERRABLE
             INITIALLY IMMEDIATE

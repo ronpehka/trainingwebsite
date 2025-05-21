@@ -1,10 +1,10 @@
 package com.bcs.trainingwebsite.persistance.coachimage;
 
+import com.bcs.trainingwebsite.persistance.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class CoachImage {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "coach_id", nullable = false)
-    private CoachImage coachImage;
+    private User user_id;
 
     @NotNull
     @Column(name = "data", nullable = false)
