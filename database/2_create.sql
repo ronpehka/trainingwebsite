@@ -145,6 +145,18 @@ CREATE TABLE weekday (
                          CONSTRAINT weekday_pk PRIMARY KEY (id)
 );
 
+
+
+-- Table: coach_image
+CREATE TABLE coach_image (
+                                id serial  NOT NULL,
+                                coach_id int  NOT NULL,
+                                data bytea  NOT NULL,
+                                CONSTRAINT coach_image_pk PRIMARY KEY (id)
+);
+
+
+
 -- foreign keys
 -- Reference: coach_sport_sport (table: coach_sport)
 ALTER TABLE coach_sport ADD CONSTRAINT coach_sport_sport
@@ -152,6 +164,15 @@ ALTER TABLE coach_sport ADD CONSTRAINT coach_sport_sport
         REFERENCES sport (id)
         NOT DEFERRABLE
             INITIALLY IMMEDIATE
+;
+
+-- Reference: coach_image (table: coach_image)
+ALTER TABLE coach_image ADD CONSTRAINT coach_image
+    FOREIGN KEY (coach_id)
+        REFERENCES coach_image (id)
+        NOT DEFERRABLE
+            INITIALLY IMMEDIATE
+
 ;
 
 -- Reference: coach_sport_user (table: coach_sport)
@@ -182,7 +203,7 @@ ALTER TABLE location_image ADD CONSTRAINT location_image_location
 -- Reference: mailbox_user_receiver (table: mailbox)
 ALTER TABLE mailbox ADD CONSTRAINT mailbox_user_receiver
     FOREIGN KEY (receiver_user_id)
-        REFERENCES "user" (id)
+        REFERENCES coach_image (id)
         NOT DEFERRABLE
             INITIALLY IMMEDIATE
 ;
