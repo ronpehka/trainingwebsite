@@ -63,7 +63,7 @@ public class RegistrationService {
 
     private User createAndSaveUser(CoachProfile coachProfile) {
         Role roleCoach = roleRepository.findById(COACH).get();
-        User user = userMapper.toUser(coachProfile);
+        User user = userMapper.toCoach(coachProfile);
         user.setRole(roleCoach);
         userRepository.save(user);
         return user;

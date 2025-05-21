@@ -21,6 +21,6 @@ public interface UserMapper {
     User toUser(CustomerProfile customerProfile);
 
     @InheritConfiguration(name = "toUser")
-    User toUser(CoachProfile coachProfile);
+    User toCoach(CoachProfile coachProfile);
 
 }
