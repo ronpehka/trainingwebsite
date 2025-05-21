@@ -21,12 +21,12 @@ import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILAB
 public class RegistrationService {
 
 
-    public static final int CUSTOMER = 3;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final ProfileRepository profileRepository;
     private final ProfileMapper profileMapper;
+    public static final int CUSTOMER = 3;
     private static final int COACH = 2;
 
     public void addNewCustomer(CustomerProfile customerProfile) {
@@ -34,6 +34,7 @@ public class RegistrationService {
         User user = createAndSaveUser(customerProfile);
         createAndSaveProfile(customerProfile, user);
     }
+
     public void addNewCoach(CoachProfile coachProfile) {
         validateEmailIsAvailable(coachProfile.getEmail());
         User user = createAndSaveUser(coachProfile);
