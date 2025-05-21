@@ -21,8 +21,6 @@ public interface UserMapper {
     User toUser(CustomerProfile customerProfile);
 
     @InheritConfiguration(name = "toUser")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "phoneNumber", target = "phoneNumber")
     User toUser(CoachProfile coachProfile);
 
 }
