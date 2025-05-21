@@ -60,8 +60,6 @@ public class RegistrationService {
         return user;
     }
 
-
-
     private User createAndSaveUser(CoachProfile coachProfile) {
         Role roleCoach = roleRepository.findById(COACH).get();
         User user = userMapper.toUser(coachProfile);
@@ -69,8 +67,6 @@ public class RegistrationService {
         userRepository.save(user);
         return user;
     }
-
-
 
     private void validateEmailIsAvailable(String email) {
         boolean userExists = userRepository.existsByEmail(email);
