@@ -1,6 +1,7 @@
 package com.bcs.trainingwebsite.controller.location.dto;
 
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 public class LocationInfo {
@@ -8,6 +9,7 @@ public class LocationInfo {
     private String locationName;
     private String locationAddress;
     private String imageData;
-    private String locationDistrict;
+    @Setter
+    private String districtName;
 
 }
