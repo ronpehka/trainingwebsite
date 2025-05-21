@@ -17,6 +17,7 @@ import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayReposi
 import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +72,12 @@ public class TrainingInfoService {
         trainingInfo.setCoachFullName(profile.getFullName());
     }
 
-
+    @Transactional
+    public void addNewTraining(TrainingInfo trainingInfo) {
+        Optional<Location> optionalLocation = locationRepository.findLocationBy(trainingInfo.getLocationName(), trainingInfo.getAddress());
+        if (optionalLocation.isPresent()) {
+            Location location = optionalLocation.get();
+        }
+        trainingRepository.findTrainingBy()
+    }
 }
