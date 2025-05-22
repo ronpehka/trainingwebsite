@@ -1,7 +1,9 @@
 package com.bcs.trainingwebsite.service;
 
+import com.bcs.trainingwebsite.controller.location.dto.DistrictInfo;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
 import com.bcs.trainingwebsite.persistance.district.District;
+import com.bcs.trainingwebsite.persistance.district.DistrictMapper;
 import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
 import com.bcs.trainingwebsite.persistance.location.Location;
 import com.bcs.trainingwebsite.persistance.location.LocationMapper;
@@ -23,6 +25,7 @@ public class LocationService {
     private final LocationMapper locationMapper;
     private final LocationImageRepository locationImageRepository;
     private final DistrictRepository districtRepository;
+    private final DistrictMapper districtMapper;
 
 
     public List<LocationInfo> getAllLocations() {
@@ -39,18 +42,16 @@ public class LocationService {
             });
 
         }
-        addDistrictInfoTo(locationInfos);
+        for (LocationInfo locationInfo : locationInfos) {
+Optional<District> optionalDistrict = districtRepository.findById(locationInfo.getDistrictId());
+Optional<DistrictInfo> optionalDistrictInfo = optionalDistrict.map(d -> districtMapper.toDistrictInfo(d));
 
+        }
         return locationInfos;
     }
 
-    private void addDistrictInfoTo(List<LocationInfo> locationInfos) {
-        for (LocationInfo locationInfo : locationInfos) {
-            Integer locationId = locationInfo.getLocationId();
-            Optional<District> optionalDistrict = districtRepository.findByLocationId(locationId);
-            optionalDistrict.ifPresent(district -> locationInfo.setDistrictName(district.getName()));
+
 
         }
-    }
 
-}
+
