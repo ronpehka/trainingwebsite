@@ -1,6 +1,7 @@
 package com.bcs.trainingwebsite.persistance.trainingweekday;
 
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
+import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDayInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -14,6 +15,10 @@ public interface TrainingWeekdayMapper {
     TrainingDay toTrainingDay(TrainingWeekday trainingWeekday);
 
     List<TrainingDay> toTrainingDays(List<TrainingWeekday> trainingWeekdays);
+
+    @Mapping(source = "weekday", target="weekday.shortField")
+    TrainingWeekday toTrainingWeekday(TrainingDay trainingDay);
+    List<TrainingWeekday> toTrainingWeekDays(List<TrainingDay> trainingDays);
 
 
 }

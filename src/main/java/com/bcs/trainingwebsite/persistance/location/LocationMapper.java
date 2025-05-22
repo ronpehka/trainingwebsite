@@ -9,6 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface LocationMapper {
     @Mapping(source = "name", target = "locationName")
+    @Mapping(source = "district.name", target = "districtName")
     @Mapping(source = "address", target = "address")
     LocationInfo toLocationInfo(Location location);
 

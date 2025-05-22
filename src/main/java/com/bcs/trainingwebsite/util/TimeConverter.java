@@ -8,4 +8,7 @@ public class TimeConverter {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH.mm");
         return time.format(formatter);
     }
+    public static LocalTime stringToLocalTime(String timeString) {
+        return LocalTime.parse(timeString);
+    }
 }

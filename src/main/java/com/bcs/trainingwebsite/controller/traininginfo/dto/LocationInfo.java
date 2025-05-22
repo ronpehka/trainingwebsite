@@ -6,5 +6,6 @@ import lombok.Data;
 public class LocationInfo {
     private String locationName;
     private String address;
+    private String districtName;
 
 }

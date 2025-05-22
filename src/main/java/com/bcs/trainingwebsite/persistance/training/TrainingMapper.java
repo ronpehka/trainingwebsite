@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.persistance.training;
 
+import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.util.DateConverter;
 import com.bcs.trainingwebsite.util.TimeConverter;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, imports={Status.class})
 public interface TrainingMapper {
 
 
@@ -18,8 +19,6 @@ public interface TrainingMapper {
     @Mapping(source = "gender", target = "trainingGender")
     @Mapping(source = "startDate", target = "startDate", qualifiedByName = "toFormattedStartDate")
     @Mapping(source = "endDate", target = "endDate", qualifiedByName =  "toFormattedEndDate")
-    //nädalapäevad, treenerinimi, sporditüüp
-
     @Mapping(source = "id", target = "trainingId")
     @Mapping(source = "coachUser.id", target = "coachUserId")
     @Mapping(source = "sport.name", target = "sportType")
@@ -28,9 +27,24 @@ public interface TrainingMapper {
     @Mapping(source = "maxLimit", target = "maxLimit")
     @Mapping(constant = "", target = "address")
     @Mapping(constant = "", target = "locationName")
+    @Mapping(constant = "", target="districtName")
     TrainingInfo toTrainingInfo(Training training);
-
     List<TrainingInfo> toTrainingInfos(List<Training> trainings);
+
+    @Mapping(source = "trainingName", target = "name")
+    @Mapping(source = "trainingDescription", target = "description")
+    @Mapping(source = "trainingGender", target = "gender")
+    @Mapping(source = "startDate", target = "startDate", qualifiedByName = "toDatabaseStartDate")
+    @Mapping(source = "endDate", target = "endDate", qualifiedByName =  "toDatabaseEndDate")
+    @Mapping(source = "trainingId", target = "id")
+    @Mapping(source = "coachUserId", target = "coachUser.id")
+    @Mapping(source = "sportType", target = "sport.name")
+    @Mapping(source = "startTime", target = "startTime", qualifiedByName = "toDatabaseStartTime")
+    @Mapping(source = "endTime", target = "endTime", qualifiedByName = "toDatabaseEndTime")
+    @Mapping(source = "maxLimit", target = "maxLimit")
+    @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
+    Training toTraining(TrainingInfo trainingInfo);
+
 
     @Named("toFormattedStartDate")
     static String toStringStartDate(LocalDate startDate){
@@ -47,6 +61,22 @@ public interface TrainingMapper {
     @Named("toFormattedEndTime")
     static String toStringEndTime(LocalTime endTime){
         return TimeConverter.localTimeToString(endTime);
+    }
+    @Named("toDatabaseStartTime")
+    static LocalTime toLocalTimeStartTime(String startTime){
+        return TimeConverter.stringToLocalTime(startTime);
+    }
+    @Named("toDatabaseEndTime")
+    static LocalTime toLocalTimeEndTime(String endTime){
+        return TimeConverter.stringToLocalTime(endTime);
+    }
+    @Named("toDatabaseStartDate")
+    static LocalDate toLocalDateStartDate(String startDate){
+        return DateConverter.stringToLocaldate(startDate);
+    }
+    @Named("toDatabaseEndDate")
+    static LocalDate toLocalDateEndDate(String endDate){
+        return DateConverter.stringToLocaldate(endDate);
     }
 
 }
