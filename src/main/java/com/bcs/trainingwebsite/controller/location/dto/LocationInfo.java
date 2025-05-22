@@ -10,5 +10,6 @@ public class LocationInfo {
     private String locationAddress;
     private String imageData;
     private Integer districtId;
+    private String districtName;
 
 }

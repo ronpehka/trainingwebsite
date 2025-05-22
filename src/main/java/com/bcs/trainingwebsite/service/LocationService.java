@@ -1,6 +1,5 @@
 package com.bcs.trainingwebsite.service;
 
-import com.bcs.trainingwebsite.controller.location.dto.DistrictInfo;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
 import com.bcs.trainingwebsite.persistance.district.District;
 import com.bcs.trainingwebsite.persistance.district.DistrictMapper;
@@ -34,24 +33,31 @@ public class LocationService {
         List<LocationInfo> locationInfos = locationMapper.toLocationInfos(locations);
 
         for (LocationInfo locationInfo : locationInfos) {
-            Optional<LocationImage> optionalLocationImage = locationImageRepository.findLocationImageBy(locationInfo.getLocationId());
-            optionalLocationImage.ifPresent(locationImage -> {
-                // Chat GPT: Base64 encode the image data
-                String base64Image = Base64.getEncoder().encodeToString(locationImage.getData());
-                locationInfo.setImageData(base64Image);
-            });
-
+            getLocationImageIfExists(locationInfo);
         }
         for (LocationInfo locationInfo : locationInfos) {
-Optional<District> optionalDistrict = districtRepository.findById(locationInfo.getDistrictId());
-Optional<DistrictInfo> optionalDistrictInfo = optionalDistrict.map(d -> districtMapper.toDistrictInfo(d));
-
+            getDistrictNameIfExists(locationInfo);
         }
         return locationInfos;
     }
 
 
+    private void getLocationImageIfExists(LocationInfo locationInfo) {
+        Optional<LocationImage> optionalLocationImage = locationImageRepository.findLocationImageBy(locationInfo.getLocationId());
+        optionalLocationImage
+                .ifPresent(locationImage -> {
+                    // Chat GPT: Base64 encode the image data
+                    String base64Image = Base64.getEncoder().encodeToString(locationImage.getData());
+                    locationInfo.setImageData(base64Image);
+                });
+    }
+    private void getDistrictNameIfExists(LocationInfo locationInfo) {
+        Optional<District> optionalDistrict = districtRepository.findById(locationInfo.getDistrictId());
+        optionalDistrict
+                .map(districtMapper::toDistrictInfo)
+                .ifPresent(districtInfo -> locationInfo.setDistrictName(districtInfo.getDistrictName()));
+    }
 
-        }
+}
 
 
