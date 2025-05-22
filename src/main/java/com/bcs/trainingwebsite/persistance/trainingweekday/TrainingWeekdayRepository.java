@@ -18,12 +18,10 @@ public interface TrainingWeekdayRepository extends JpaRepository<TrainingWeekday
     @Query("select t from TrainingWeekday t where t.training.id = :trainingId")
     List<TrainingWeekday> findTrainingWeekdaysBy(Integer trainingId);
 
-    @Query("""
-            select t from TrainingWeekday t
-            where t.training.id = :id and t.training.coachUser.id = :coachId and t.training.startTime = :startTime and t.training.endTime = :endTime and t.weekday.shortField = :weekday""")
-    List<TrainingWeekday> findCoachesTraining(Integer trainingId, Integer coachId,  LocalTime startTime,  LocalTime endTime, String weekday);
+    @Transactional
+    @Modifying
+    @Query("update TrainingWeekday t set t.training = :training, t.weekday.id = :weekdayId")
+    void updateTrainingWeekDays(Training training, Integer weekdayId);
 
-    @Query("select t from TrainingWeekday t where t.training.id = :trainingId and t.weekday.shortField = :weekDayName")
-    Optional<TrainingWeekday> findTrainingWeekdayBy( Integer trainingId,  String weekDayName);
 
 }

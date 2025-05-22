@@ -15,11 +15,5 @@ public interface WeekdayMapper {
     @Mapping(source = "shortField", target = "weekday")
     TrainingDay toWeekdayDto(Weekday weekday);
 
-    @Mapping(source="id", target = "weekDayId")
-    @Mapping(source="shortField", target = "weekDay")
-    @Mapping(source="number", target = "weekDayNumber")
-    @Mapping(constant = "false", target = "isAvailable")
-    TrainingDayInfo toTrainingDayInfo(Weekday Weekday);
-    List<TrainingDayInfo> toTrainingDayInfos(List<Weekday> weekdays);
 
 }

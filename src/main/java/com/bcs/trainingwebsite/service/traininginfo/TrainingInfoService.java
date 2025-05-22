@@ -1,24 +1,24 @@
 package com.bcs.trainingwebsite.service.traininginfo;
 
 import com.bcs.trainingwebsite.Status;
-import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
-import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
-import com.bcs.trainingwebsite.infrastructure.error.Error;
-import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
+import com.bcs.trainingwebsite.controller.traininginfo.dto.*;
 import com.bcs.trainingwebsite.persistance.district.District;
 import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
 import com.bcs.trainingwebsite.persistance.location.Location;
+import com.bcs.trainingwebsite.persistance.location.LocationMapper;
 import com.bcs.trainingwebsite.persistance.location.LocationRepository;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
+import com.bcs.trainingwebsite.persistance.sport.Sport;
+import com.bcs.trainingwebsite.persistance.sport.SportRepository;
 import com.bcs.trainingwebsite.persistance.training.Training;
 import com.bcs.trainingwebsite.persistance.training.TrainingMapper;
 import com.bcs.trainingwebsite.persistance.training.TrainingRepository;
+import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDateRepository;
 import com.bcs.trainingwebsite.persistance.traininglocation.TrainingLocationRepository;
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekday;
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayMapper;
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayRepository;
-import com.bcs.trainingwebsite.persistance.weekday.Weekday;
 import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
 import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
 import com.bcs.trainingwebsite.util.TimeConverter;
@@ -45,6 +45,9 @@ public class TrainingInfoService {
     private final TrainingWeekdayMapper trainingWeekdayMapper;
     private final DistrictRepository districtRepository;
     private final WeekdayRepository weekdayRepository;
+    private final LocationMapper locationMapper;
+    private final TrainingDateRepository trainingDateRepository;
+    private final SportRepository sportRepository;
 
     public List<TrainingInfo> getAllTrainingInfo() {
         List<Training> trainings = trainingRepository.findTrainingsBy(Status.ACTIVE.getCode());
@@ -84,62 +87,82 @@ public class TrainingInfoService {
     }
 
     @Transactional
-    public void addNewTraining(TrainingInfo trainingInfo) {
-        Location location = locationRepository.findLocationBy(trainingInfo.getLocationName(), trainingInfo.getAddress())
-                .orElseGet(() -> {
-                    Location newLocation = new Location();
-                    newLocation.setAddress(trainingInfo.getAddress());
-                    newLocation.setName(trainingInfo.getLocationName());
-                    District district = districtRepository.findDistrictBy(trainingInfo.getDistrictName()).orElseGet(() -> {
-                        District newDistrict = new District();
-                        newDistrict.setName(trainingInfo.getDistrictName());
-                        return districtRepository.save(newDistrict);
-                    });
-                    newLocation.setDistrict(district);
-                    return locationRepository.save(newLocation);
-
-                });
-        handleAddTrainingLocationInfo(trainingInfo);
-        LocalTime newTrainingStartTime = TimeConverter.stringToLocalTime(trainingInfo.getStartTime());
-        LocalTime newTrainingEndTime = TimeConverter.stringToLocalTime(trainingInfo.getEndTime());
-        List<Training> existingTrainings = trainingRepository.existingTrainings(trainingInfo.getCoachUserId(), Status.ACTIVE.getCode());
+    public void addNewTraining(NewTrainingInfo newTrainingInfo) {
+        Location location = getLocation(newTrainingInfo);
+        LocationInfo locationInfo = locationMapper.toLocationInfo(location);
+        LocalTime newTrainingStartTime = TimeConverter.stringToLocalTime(newTrainingInfo.getStartTime());
+        LocalTime newTrainingEndTime = TimeConverter.stringToLocalTime(newTrainingInfo.getEndTime());
+        List<Training> existingTrainings = trainingRepository.existingTrainings(newTrainingInfo.getCoachUserId(), Status.ACTIVE.getCode());
         List<TrainingInfo> existingTrainingInfos = trainingMapper.toTrainingInfos(existingTrainings);
-       for (TrainingInfo existingTrainingInfo : existingTrainingInfos) {
+
+        for (TrainingInfo existingTrainingInfo : existingTrainingInfos) {
             addTrainingDays(existingTrainingInfo);
-           handleAddTrainingLocationInfo(existingTrainingInfo);
-           if(existingTrainingInfo.equals(trainingInfo)){
-               throw new ForbiddenException("Selline trenn on juba olemas", 333);
-           }
-           List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(existingTrainingInfo.getTrainingId());
-           List<TrainingDay> currentTrainingDays = trainingWeekdayMapper.toTrainingDays(trainingWeekdays);
-           for (TrainingDay newTrainingDay : trainingInfo.getTrainingDays()) {
-               for (TrainingDay existingWeekDay : currentTrainingDays) {
-                   if (!existingWeekDay.getWeekday().equals(newTrainingDay.getWeekday())) continue;
-                   LocalTime existingStartTime = TimeConverter.stringToLocalTime(existingTrainingInfo.getStartTime());
-                   LocalTime existingEndTime = TimeConverter.stringToLocalTime(existingTrainingInfo.getEndTime());
-                   boolean sameTime = existingStartTime.equals(newTrainingStartTime) && existingEndTime.equals(newTrainingEndTime);
-                   boolean differentLocation = !existingTrainingInfo.getLocationName().equals(trainingInfo.getLocationName()) || !existingTrainingInfo.getAddress().equals(trainingInfo.getAddress());
-                   if (sameTime && differentLocation) {
-                       throw new IllegalArgumentException("Coach already has training at a different location at the same time on " + newTrainingDay.getWeekday());
-                   }
+            for (TrainingDay existingTrainingDay : existingTrainingInfo.getTrainingDays()) {
+                if(newTrainingInfo.getTrainingDays().contains(existingTrainingDay.getWeekday())){
+                    boolean sameTime = newTrainingStartTime.equals(TimeConverter.stringToLocalTime(existingTrainingInfo.getStartTime())) && newTrainingEndTime.equals(TimeConverter.stringToLocalTime(existingTrainingInfo.getEndTime()));
+                    boolean differentPlace = !existingTrainingInfo.getAddress().equals(locationInfo.getAddress()) && !existingTrainingInfo.getLocationName().equals(locationInfo.getLocationName());
+                    if(sameTime && differentPlace){
+                        throw new IllegalArgumentException("Treeneril on juba treening teises kohas samal ajal" + existingTrainingDay.getWeekday());
+                    }
+                }
 
-               }
-           }
-
-       }
-
-        Training training = trainingMapper.toTraining(trainingInfo);
-        Training saveTraining = trainingRepository.save(training);
-        trainingLocationRepository.updateTrainingLocationTable(saveTraining.getId(),location.getId(),Status.ACTIVE.getCode());
-        List<Weekday> all = weekdayRepository.findAll();
-
-
-
-
+            }
+        }
+        Sport sport = getSport(newTrainingInfo);
+        Training training = saveSport(newTrainingInfo, sport);
+        updateDataBaseTables(training, location);
+        updateTrainingWeekDays(newTrainingInfo, training);
     }
 
+    private void updateTrainingWeekDays(NewTrainingInfo newTrainingInfo, Training training) {
+        for (TrainingDayInfo trainingDay : newTrainingInfo.getTrainingDays()) {
+            trainingWeekdayRepository.updateTrainingWeekDays(training, trainingDay.getWeekDayId());
+        }
+    }
 
+    private void updateDataBaseTables(Training training, Location location) {
+        trainingLocationRepository.updateTrainingLocation(training, location,Status.ACTIVE.getCode());
+        trainingDateRepository.updateTrainingDate(training.getId(), training.getStartDate());
+        trainingDateRepository.updateTrainingDate(training.getId(), training.getEndDate());
+    }
 
+    private Training saveSport(NewTrainingInfo newTrainingInfo, Sport sport) {
+        Training training = trainingMapper.toTraining(newTrainingInfo);
+        training.setSport(sport);
+        trainingRepository.save(training);
+        return training;
+    }
+
+    private Sport getSport(NewTrainingInfo newTrainingInfo) {
+        Sport sport = sportRepository.findSportBy(newTrainingInfo.getSportType()).orElseGet(() -> {
+            Sport newSport = new Sport();
+            newSport.setName(newTrainingInfo.getSportType());
+            return sportRepository.save(newSport);
+        });
+        return sport;
+    }
+
+    private Location getLocation(NewTrainingInfo newTrainingInfo) {
+        return locationRepository.findLocationBy(newTrainingInfo.getLocationName(), newTrainingInfo.getAddress())
+                .orElseGet(() -> {
+                    Location newLocation = new Location();
+                    newLocation.setAddress(newTrainingInfo.getAddress());
+                    newLocation.setName(newTrainingInfo.getTrainingName());
+                    District district = handleDistrict(newTrainingInfo);
+                    newLocation.setDistrict(district);
+                    return locationRepository.save(newLocation);
+                });
+    }
+
+    private District handleDistrict(NewTrainingInfo newTrainingInfo) {
+        District district = districtRepository.findDistrictBy(newTrainingInfo.getDistrictName())
+                .orElseGet(()-> {
+                    District newDistrict = new District();
+                    newDistrict.setName(newTrainingInfo.getDistrictName());
+                    return districtRepository.save(newDistrict);
+                });
+        return district;
+    }
 }
 
 

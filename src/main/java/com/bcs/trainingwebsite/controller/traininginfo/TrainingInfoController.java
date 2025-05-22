@@ -1,7 +1,9 @@
 package com.bcs.trainingwebsite.controller.traininginfo;
 
+import com.bcs.trainingwebsite.controller.traininginfo.dto.NewTrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.service.traininginfo.TrainingInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +20,8 @@ public class TrainingInfoController {
 
 
    @PostMapping("/training-info")
-   public void addNewTraining(@RequestBody TrainingInfo trainingInfo){
-       trainingInfoService.addNewTraining(trainingInfo);
+   public void addNewTraining(@RequestBody @Valid NewTrainingInfo newTrainingInfo){
+       trainingInfoService.addNewTraining(newTrainingInfo);
    }
 
     @GetMapping("/training-info")

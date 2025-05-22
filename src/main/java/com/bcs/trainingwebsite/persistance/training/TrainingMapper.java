@@ -1,6 +1,7 @@
 package com.bcs.trainingwebsite.persistance.training;
 
 import com.bcs.trainingwebsite.Status;
+import com.bcs.trainingwebsite.controller.traininginfo.dto.NewTrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.util.DateConverter;
 import com.bcs.trainingwebsite.util.TimeConverter;
@@ -43,7 +44,7 @@ public interface TrainingMapper {
     @Mapping(source = "endTime", target = "endTime", qualifiedByName = "toDatabaseEndTime")
     @Mapping(source = "maxLimit", target = "maxLimit")
     @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
-    Training toTraining(TrainingInfo trainingInfo);
+    Training toTraining(NewTrainingInfo newTrainingInfo);
 
 
     @Named("toFormattedStartDate")

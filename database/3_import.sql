@@ -32,10 +32,10 @@ INSERT INTO training.profile (
          );
 
 
-INSERT INTO training.district (id, name) VALUES (1, 'Haabersti');
-INSERT INTO training.district (id, name) VALUES (2, 'Kesklinn');
-INSERT INTO training.district (id, name) VALUES (3, 'Viimsi');
-INSERT INTO training.district (id, name) VALUES (4, 'Tabasalu');
+INSERT INTO training.district (id, name) VALUES (default, 'Haabersti');
+INSERT INTO training.district (id, name) VALUES (default, 'Kesklinn');
+INSERT INTO training.district (id, name) VALUES (default, 'Viimsi');
+INSERT INTO training.district (id, name) VALUES (default, 'Tabasalu');
 
 INSERT INTO training.location (id, name, district_id, address, lat, long) VALUES (default, 'Saku suurhall', 1, 'Paldiski mnt 104b, 13522 Tallinn', null, null);
 INSERT INTO training.location (id, name, district_id, address, lat, long) VALUES (default, 'Forus Spordikeskus', 3, 'Karulaugu tee 13, Haabneeme, 74001 Harju maakond', null, null);
