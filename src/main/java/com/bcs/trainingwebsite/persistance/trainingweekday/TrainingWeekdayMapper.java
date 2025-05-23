@@ -15,5 +15,9 @@ public interface TrainingWeekdayMapper {
 
     List<TrainingDay> toTrainingDays(List<TrainingWeekday> trainingWeekdays);
 
+    @Mapping(source = "weekday", target="weekday.shortField")
+    TrainingWeekday toTrainingWeekday(TrainingDay trainingDay);
+    List<TrainingWeekday> toTrainingWeekDays(List<TrainingDay> trainingDays);
+
 
 }
