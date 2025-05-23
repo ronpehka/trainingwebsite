@@ -16,11 +16,13 @@ public interface TrainingDateRepository extends JpaRepository<TrainingDate, Inte
     @Query("update TrainingDate t set t.training.id = :trainingId, t.date = :date")
     void updateTrainingDate(Integer trainingId, LocalDate date);
 
-    @Query("select (count(t) > 0) from TrainingDate t where t.training = :training and t.date = :date")
-    boolean trainingDateExistsBy(Training training, LocalDate date);
-
     @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date")
     Optional<TrainingDate> findTrainingDateBy(User user, LocalDate date);
+
+    @Transactional
+    @Modifying
+    @Query("delete from TrainingDate t where t.training.id = :trainingId")
+    void deleteByTrainingId(Integer trainingId);
 
 
 }

@@ -5,6 +5,8 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
+import com.bcs.trainingwebsite.infrastructure.error.Error;
+import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.location.Location;
@@ -89,13 +91,9 @@ public class TrainingInfoService {
 
     @Transactional
     public void addNewTraining(TrainingDto trainingDto) {
+        User userCoach = getUserCoach(trainingDto);
 
-
-        User userCoach = userRepository.findById(trainingDto.getCoachUserId())
-                .orElseThrow(() -> new ForeignKeyNotFoundException("coachUserId", trainingDto.getCoachUserId()));
-
-        Sport sport = sportRepository.findById(trainingDto.getSportId())
-                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+        Sport sport = getSport(trainingDto);
 
         Training training = trainingMapper.toTraining(trainingDto);
         training.setCoachUser(userCoach);
@@ -109,8 +107,17 @@ public class TrainingInfoService {
         // Check for overlapping training sessions
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
 
-        // Save valid training dates
         trainingDateRepository.saveAll(trainingDates);
+    }
+
+    private Sport getSport(TrainingDto trainingDto) {
+        return sportRepository.findById(trainingDto.getSportId())
+                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+    }
+
+    private User getUserCoach(TrainingDto trainingDto) {
+        return userRepository.findById(trainingDto.getCoachUserId())
+                .orElseThrow(() -> new ForeignKeyNotFoundException("coachUserId", trainingDto.getCoachUserId()));
     }
 
     private List<Integer> getAvailableWeekdays(List<TrainingWeekdayInfo> trainingWeekdayInfos) {
@@ -157,6 +164,34 @@ public class TrainingInfoService {
     }
 
 
+    public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
+        User userCoach = getUserCoach(trainingDto);
+        Training training = trainingRepository.findById(trainingId)
+                .orElseThrow(() -> new DataNotFoundException(Error.INVALID_REQUEST.getMessage(), Error.INVALID_REQUEST.getErrorCode()));
+        trainingMapper.partialUpdate(training,trainingDto);
+        handleSportUpdate(trainingDto, training);
+        trainingRepository.save(training);
+        // Determine valid training dates
+        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
+        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
+
+        // Check for overlapping training sessions
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+
+        // Save valid training dates
+        trainingDateRepository.deleteByTrainingId(training.getId());
+        trainingDateRepository.saveAll(trainingDates);
+
+    }
+
+    private void handleSportUpdate(TrainingDto trainingDto, Training training) {
+        Integer trainingDtoSportId = trainingDto.getSportId();
+        Integer trainingSportId = training.getSport().getId();
+        if(!trainingDtoSportId.equals(trainingSportId)){
+            Sport sport = getSport(trainingDto);
+            training.setSport(sport);
+        }
+    }
 }
 
 

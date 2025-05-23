@@ -33,21 +33,6 @@ public interface TrainingMapper {
 
     List<TrainingInfo> toTrainingInfos(List<Training> trainings);
 
-
-//    private User coachUser;
-//    private Sport sport;
-
-//    private String name;
-//    private String description;
-//    private String gender;
-//    private LocalDate startDate;
-//    private LocalDate endDate;
-//    private LocalTime startTime;
-//    private LocalTime endTime;
-//    private String status;
-//    private Integer maxLimit;
-
-
     @Mapping(source = "trainingName", target = "name")
     @Mapping(source = "trainingDescription", target = "description")
     @Mapping(source = "trainingGender", target = "gender")
@@ -59,6 +44,17 @@ public interface TrainingMapper {
     @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     Training toTraining(TrainingDto trainingDto);
 
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "trainingName", target = "name")
+    @Mapping(source = "trainingDescription", target = "description")
+    @Mapping(source = "trainingGender", target = "gender")
+    @Mapping(source = "startDate", target = "startDate")
+    @Mapping(source = "endDate", target = "endDate")
+    @Mapping(source = "startTime", target = "startTime", qualifiedByName = "toDatabaseTime")
+    @Mapping(source = "endTime", target = "endTime", qualifiedByName = "toDatabaseTime")
+    @Mapping(source = "maxLimit", target = "maxLimit")
+    Training partialUpdate(@MappingTarget Training training, TrainingDto trainingDto);
 
     @Named("toFormattedStartDate")
     static String toStringStartDate(LocalDate startDate) {
@@ -83,21 +79,6 @@ public interface TrainingMapper {
     @Named("toDatabaseTime")
     static LocalTime toLocalTimeStartTime(String time) {
         return TimeConverter.stringToLocalTime(time);
-    }
-
-    @Named("toDatabaseEndTime")
-    static LocalTime toLocalTimeEndTime(String endTime) {
-        return TimeConverter.stringToLocalTime(endTime);
-    }
-
-    @Named("toDatabaseStartDate")
-    static LocalDate toLocalDateStartDate(String startDate) {
-        return DateConverter.stringToLocaldate(startDate);
-    }
-
-    @Named("toDatabaseEndDate")
-    static LocalDate toLocalDateEndDate(String endDate) {
-        return DateConverter.stringToLocaldate(endDate);
     }
 
 }
