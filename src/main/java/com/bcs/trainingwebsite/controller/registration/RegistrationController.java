@@ -1,6 +1,6 @@
 package com.bcs.trainingwebsite.controller.registration;
 
-import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
+import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import com.bcs.trainingwebsite.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/coach-registration")
-    public void addNewCoach(@RequestBody CoachProfile coachProfile) {
-        registrationService.addNewCoach(coachProfile);
+    public void addNewCoach(@RequestBody CoachProfileDto coachProfileDto) {
+        registrationService.addNewCoach(coachProfileDto);
     }
 
 }

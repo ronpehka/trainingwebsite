@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CoachProfile extends CustomerProfile {
+public class CoachProfileDto extends CustomerProfile {
     private String phoneNumber;
     private String description;
     private String imageData;

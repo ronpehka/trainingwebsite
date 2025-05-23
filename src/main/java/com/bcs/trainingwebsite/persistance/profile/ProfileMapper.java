@@ -1,6 +1,6 @@
 package com.bcs.trainingwebsite.persistance.profile;
 
-import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
+import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import org.mapstruct.*;
 
@@ -18,7 +18,7 @@ public interface ProfileMapper {
     @InheritConfiguration(name = "toProfile")
     @Mapping(source = "phoneNumber", target = "phone")
     @Mapping(source = "description", target = "description")
-    Profile toProfile(CoachProfile coachProfile);
+    Profile toProfile(CoachProfileDto coachProfileDto);
 
 
 }

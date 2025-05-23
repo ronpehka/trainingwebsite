@@ -3,7 +3,7 @@ package com.bcs.trainingwebsite.persistance.user;
 
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.login.dto.LoginResponse;
-import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
+import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import org.mapstruct.*;
 
@@ -21,6 +21,6 @@ public interface UserMapper {
     User toUser(CustomerProfile customerProfile);
 
     @InheritConfiguration(name = "toUser")
-    User toCoach(CoachProfile coachProfile);
+    User toCoach(CoachProfileDto coachProfileDto);
 
 }
