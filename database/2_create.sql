@@ -25,6 +25,7 @@ CREATE TABLE location (
                           address varchar(255)  NOT NULL,
                           lat decimal(18,15)  NULL,
                           long decimal(18,15)  NULL,
+                            openinghours varchar(255) NULL,
                           CONSTRAINT location_pk PRIMARY KEY (id)
 );
 
