@@ -23,6 +23,6 @@ public class CoachImage {
 
     @NotNull
     @Column(name = "data", nullable = false)
-    private byte[] imageData;
+    private byte[] data;
 
 }

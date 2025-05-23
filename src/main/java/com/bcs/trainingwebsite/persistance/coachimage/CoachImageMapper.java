@@ -5,9 +5,8 @@ import com.bcs.trainingwebsite.util.ImageConverter;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CoachImageMapper {
 
-    @Mapping(source = "id",target = "id")
     @Mapping(source = "user_id",target = "user_id")
-    @Mapping(source = "imageData",target = "imageData")
+    @Mapping(source = "data",target = "data")
 
     CoachImage toCoachImage(CoachImage coachImage);
 
