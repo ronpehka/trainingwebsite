@@ -11,6 +11,7 @@ public interface LocationMapper {
     @Mapping(source = "name", target = "locationName")
     @Mapping(source = "address", target = "locationAddress")
     @Mapping(source = "district.id", target = "districtId")
+    @Mapping(source = "openinghours", target = "openingHours")
 
     LocationInfo toLocationInfo(Location location);
     List<LocationInfo> toLocationInfos(List<Location> locations);

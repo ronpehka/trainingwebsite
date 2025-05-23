@@ -40,4 +40,9 @@ public class Location {
     @Column(name = "long", precision = 18, scale = 15)
     private BigDecimal longField;
 
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "openinghours", nullable = false)
+    private String openinghours;
+
 }

@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.service;
 
+import com.bcs.trainingwebsite.controller.location.dto.DistrictInfo;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
 import com.bcs.trainingwebsite.persistance.district.District;
 import com.bcs.trainingwebsite.persistance.district.DistrictMapper;
@@ -43,19 +44,17 @@ public class LocationService {
 
 
     private void getLocationImageIfExists(LocationInfo locationInfo) {
-        Optional<LocationImage> optionalLocationImage = locationImageRepository.findLocationImageBy(locationInfo.getLocationId());
-        optionalLocationImage
-                .ifPresent(locationImage -> {
-                    // Chat GPT: Base64 encode the image data
-                    String base64Image = Base64.getEncoder().encodeToString(locationImage.getData());
-                    locationInfo.setImageData(base64Image);
-                });
+        locationImageRepository.findLocationImageBy(locationInfo.getLocationId())
+                .map(LocationImage::getData)
+                .map(Base64.getEncoder()::encodeToString)
+                .ifPresent(locationInfo::setImageData);
     }
+
     private void getDistrictNameIfExists(LocationInfo locationInfo) {
-        Optional<District> optionalDistrict = districtRepository.findById(locationInfo.getDistrictId());
-        optionalDistrict
+        districtRepository.findById(locationInfo.getDistrictId())
                 .map(districtMapper::toDistrictInfo)
-                .ifPresent(districtInfo -> locationInfo.setDistrictName(districtInfo.getDistrictName()));
+                .map(DistrictInfo::getDistrictName)
+                .ifPresent(locationInfo::setDistrictName);
     }
 
 }

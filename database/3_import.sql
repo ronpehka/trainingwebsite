@@ -37,9 +37,9 @@ INSERT INTO training.district (id, name) VALUES (2, 'Kesklinn');
 INSERT INTO training.district (id, name) VALUES (3, 'Viimsi');
 INSERT INTO training.district (id, name) VALUES (4, 'Tabasalu');
 
-INSERT INTO training.location (id, name, district_id, address, lat, long) VALUES (default, 'Saku suurhall', 1, 'Paldiski mnt 104b, 13522 Tallinn', null, null);
-INSERT INTO training.location (id, name, district_id, address, lat, long) VALUES (default, 'Forus Spordikeskus', 3, 'Karulaugu tee 13, Haabneeme, 74001 Harju maakond', null, null);
-INSERT INTO training.location (id, name, district_id, address, lat, long) VALUES (default, 'Tabasalu spordikompleks', 4, 'Kooli tn 1c, Tabasalu, 76901 Harju maakond', null, null);
+INSERT INTO training.location (id, name, district_id, address, lat, long, openinghours) VALUES (default, 'Saku suurhall', 1, 'Paldiski mnt 104b, 13522 Tallinn', null, null, 'E-R 11-22 L,P 9-22');
+INSERT INTO training.location (id, name, district_id, address, lat, long, openinghours) VALUES (default, 'Forus Spordikeskus', 3, 'Karulaugu tee 13, Haabneeme, 74001 Harju maakond', null, null, 'E-R 10-23');
+INSERT INTO training.location (id, name, district_id, address, lat, long, openinghours) VALUES (default, 'Tabasalu spordikompleks', 4, 'Kooli tn 1c, Tabasalu, 76901 Harju maakond', null, null, 'E-P 9-21');
 
 INSERT INTO training.training (id, coach_user_id, name, description, gender, start_date, end_date, start_time, end_time, sport_id, status, max_limit) VALUES (default, 2, 'PU10 korvpall', 'Poiste korvpall', 'M', '2025-05-16', '2026-09-10', '14:30:00', '16:00:00', 1, 'A', 20);
 INSERT INTO training.training (id, coach_user_id, name, description, gender, start_date, end_date, start_time, end_time, sport_id, status, max_limit) VALUES (default, 2, 'TU11 pesapall', 'Tüdrukute pesapall', 'N', '2025-05-20', '2026-11-11', '12:00:00', '13:30:00', 3, 'A', 20);

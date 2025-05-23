@@ -11,5 +11,6 @@ public class LocationInfo {
     private String imageData;
     private Integer districtId;
     private String districtName;
+    private String openingHours;
 
 }
