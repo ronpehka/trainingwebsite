@@ -7,10 +7,7 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
-import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
 import com.bcs.trainingwebsite.persistance.location.Location;
-import com.bcs.trainingwebsite.persistance.location.LocationMapper;
-import com.bcs.trainingwebsite.persistance.location.LocationRepository;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
 import com.bcs.trainingwebsite.persistance.sport.Sport;
@@ -26,8 +23,6 @@ import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayMapper
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayRepository;
 import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
-import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
-import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
 import com.bcs.trainingwebsite.util.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,13 +43,8 @@ public class TrainingInfoService {
     private final TrainingMapper trainingMapper;
     private final ProfileRepository profileRepository;
     private final TrainingWeekdayRepository trainingWeekdayRepository;
-    private final WeekdayMapper weekdayMapper;
     private final TrainingLocationRepository trainingLocationRepository;
-    private final LocationRepository locationRepository;
     private final TrainingWeekdayMapper trainingWeekdayMapper;
-    private final DistrictRepository districtRepository;
-    private final WeekdayRepository weekdayRepository;
-    private final LocationMapper locationMapper;
     private final TrainingDateRepository trainingDateRepository;
     private final SportRepository sportRepository;
     private final UserRepository userRepository;
@@ -96,69 +86,76 @@ public class TrainingInfoService {
         trainingInfo.setCoachFullName(profile.getFullName());
     }
 
+
     @Transactional
     public void addNewTraining(TrainingDto trainingDto) {
 
 
-        User userCoach = userRepository.findById(trainingDto.getCoachUserId()).orElseThrow(() -> new ForeignKeyNotFoundException("coachUserId", trainingDto.getCoachUserId()));
-        Sport sport = sportRepository.findById(trainingDto.getSportId()).orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+        User userCoach = userRepository.findById(trainingDto.getCoachUserId())
+                .orElseThrow(() -> new ForeignKeyNotFoundException("coachUserId", trainingDto.getCoachUserId()));
 
-        List<Training> existingTrainings = trainingRepository.findTrainingsBy(userCoach, Status.ACTIVE.getCode());
+        Sport sport = sportRepository.findById(trainingDto.getSportId())
+                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+
         Training training = trainingMapper.toTraining(trainingDto);
         training.setCoachUser(userCoach);
         training.setSport(sport);
         trainingRepository.save(training);
 
+        // Determine valid training dates
+        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
+        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
 
-        LocalDate startDate = trainingDto.getStartDate();
-        LocalDate endDate = trainingDto.getEndDate();
-        List<TrainingWeekdayInfo> trainingWeekdayInfos = trainingDto.getTrainingDays();
-        List<LocalDate> localDates = new ArrayList<>();
+        // Check for overlapping training sessions
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
 
-        List<Integer> availableWeekdays = new ArrayList<>();
+        // Save valid training dates
+        trainingDateRepository.saveAll(trainingDates);
+    }
+
+    private List<Integer> getAvailableWeekdays(List<TrainingWeekdayInfo> trainingWeekdayInfos) {
+        List<Integer> availableDays = new ArrayList<>();
         for (TrainingWeekdayInfo info : trainingWeekdayInfos) {
             if (info.isAvailable()) {
-                availableWeekdays.add(info.getWeekdayNumber());
+                availableDays.add(info.getWeekdayNumber());
             }
         }
-        
-        List<TrainingDate> trainingDates = new ArrayList<>();
+        return availableDays;
+    }
 
-        List<LocalDate> filteredDates = new ArrayList<>();
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            int currentDayOfWeek = date.getDayOfWeek().getValue(); // Monday = 1, Sunday = 7
-            if (availableWeekdays.contains(currentDayOfWeek)) {
+    private List<TrainingDate> generateTrainingDates(LocalDate start, LocalDate end, List<Integer> availableWeekdays, Training training) {
+        List<TrainingDate> trainingDates = new ArrayList<>();
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            int dayOfWeek = date.getDayOfWeek().getValue(); // Monday = 1
+            if (availableWeekdays.contains(dayOfWeek)) {
                 TrainingDate trainingDate = new TrainingDate();
                 trainingDate.setTraining(training);
                 trainingDate.setDate(date);
                 trainingDates.add(trainingDate);
             }
         }
+        return trainingDates;
+    }
 
+    private void validateTrainingTimeConflicts(List<TrainingDate> newTrainingDates, User userCoach, TrainingDto trainingDto) {
+        LocalTime newStart = TimeConverter.stringToLocalTime(trainingDto.getStartTime());
+        LocalTime newEnd = TimeConverter.stringToLocalTime(trainingDto.getEndTime());
 
-        LocalTime newTrainingStartTime = TimeConverter.stringToLocalTime(trainingDto.getStartTime());
-        LocalTime newTrainingEndTime = TimeConverter.stringToLocalTime(trainingDto.getEndTime());
+        for (TrainingDate newDate : newTrainingDates) {
+            Optional<TrainingDate> existing = trainingDateRepository.findTrainingDateBy(userCoach, newDate.getDate());
+            if (existing.isPresent()) {
+                Training existingTraining = existing.get().getTraining();
+                LocalTime existingStart = existingTraining.getStartTime();
+                LocalTime existingEnd = existingTraining.getEndTime();
 
-        for (TrainingDate trainingDate : trainingDates) {
-            Optional<TrainingDate> optionalTrainingDate = trainingDateRepository.findTrainingDateBy(userCoach, trainingDate.getDate());
-            if (optionalTrainingDate.isPresent()) {
-                TrainingDate existingTrainingDate = optionalTrainingDate.get();
-                LocalTime existingTrainingDateStartTime = existingTrainingDate.getTraining().getStartTime();
-                LocalTime existingTrainingDateEndTime = existingTrainingDate.getTraining().getEndTime();
-
-                boolean isOverlapping = newTrainingStartTime.isBefore(existingTrainingDateEndTime) &&
-                        existingTrainingDateStartTime.isBefore(newTrainingEndTime);
-
+                boolean isOverlapping = newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
                 if (isOverlapping) {
-                    throw new ForbiddenException("ei saaa bla bla bla", 999);
+                    throw new ForbiddenException("Treener ei saa anda kahte trenni korraga", 999);
                 }
-
             }
         }
-
-        trainingDateRepository.saveAll(trainingDates);
-
     }
+
 
 }
 
