@@ -1,0 +1,57 @@
+{
+  "coachUserId": 2,
+  "sportId": 1,
+  "trainingName": "string",
+  "trainingDescription": "string",
+  "trainingGender": "M",
+  "startDate": "2025-05-26",
+  "endDate": "2025-05-31",
+  "trainingDays": [
+    {
+      "weekdayId": 1,
+      "weekdayName": "string",
+      "weekdayNumber": 1,
+      "available": false
+    },
+    {
+      "weekdayId": 2,
+      "weekdayName": "string",
+      "weekdayNumber": 2,
+      "available": true
+    },
+    {
+      "weekdayId": 3,
+      "weekdayName": "string",
+      "weekdayNumber": 3,
+      "available": false
+    },
+    {
+      "weekdayId": 4,
+      "weekdayName": "string",
+      "weekdayNumber": 4,
+      "available": true
+    },
+    {
+      "weekdayId": 5,
+      "weekdayName": "string",
+      "weekdayNumber": 5,
+      "available": false
+    },
+    {
+      "weekdayId": 6,
+      "weekdayName": "string",
+      "weekdayNumber": 6,
+      "available": false
+    },
+    {
+      "weekdayId": 7,
+      "weekdayName": "string",
+      "weekdayNumber": 7,
+      "available": false
+    }
+
+  ],
+  "startTime": "10:00",
+  "endTime": "12:00",
+  "maxLimit": 20
+}

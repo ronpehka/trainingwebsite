@@ -1,7 +1,6 @@
 package com.bcs.trainingwebsite.persistance.trainingweekday;
 
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
-import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDayInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

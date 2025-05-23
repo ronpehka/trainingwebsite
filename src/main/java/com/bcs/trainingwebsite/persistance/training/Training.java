@@ -1,7 +1,7 @@
 package com.bcs.trainingwebsite.persistance.training;
 
-import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.sport.Sport;
+import com.bcs.trainingwebsite.persistance.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +25,12 @@ public class Training {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "coach_user_id", nullable = false)
     private User coachUser;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sport_id", nullable = false)
+    private Sport sport;
+
 
     @Size(max = 255)
     @NotNull
@@ -57,17 +63,12 @@ public class Training {
     private LocalTime endTime;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sport_id", nullable = false)
-    private Sport sport;
+    @Column(name = "max_limit", nullable = false)
+    private Integer maxLimit;
 
     @Size(max = 1)
     @NotNull
     @Column(name = "status", nullable = false, length = 1)
     private String status;
-
-    @NotNull
-    @Column(name = "max_limit", nullable = false)
-    private Integer maxLimit;
 
 }

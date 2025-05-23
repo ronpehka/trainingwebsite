@@ -1,6 +1,6 @@
 package com.bcs.trainingwebsite.controller.traininginfo;
 
-import com.bcs.trainingwebsite.controller.traininginfo.dto.NewTrainingInfo;
+import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.service.traininginfo.TrainingInfoService;
 import jakarta.validation.Valid;
@@ -20,8 +20,8 @@ public class TrainingInfoController {
 
 
    @PostMapping("/training-info")
-   public void addNewTraining(@RequestBody @Valid NewTrainingInfo newTrainingInfo){
-       trainingInfoService.addNewTraining(newTrainingInfo);
+   public void addNewTraining(@RequestBody TrainingDto trainingDto){
+       trainingInfoService.addNewTraining(trainingDto);
    }
 
     @GetMapping("/training-info")

@@ -89,6 +89,7 @@ CREATE TABLE sport (
 CREATE TABLE training (
                           id serial  NOT NULL,
                           coach_user_id int  NOT NULL,
+                          sport_id int  NOT NULL,
                           name varchar(255)  NOT NULL,
                           description varchar(1000)  NOT NULL,
                           gender char(1)  NOT NULL,
@@ -96,9 +97,8 @@ CREATE TABLE training (
                           end_date date  NOT NULL,
                           start_time time  NOT NULL,
                           end_time time  NOT NULL,
-                          sport_id int  NOT NULL,
-                          status varchar(1)  NOT NULL,
                           max_limit int  NOT NULL,
+                          status varchar(1)  NOT NULL,
                           CONSTRAINT training_pk PRIMARY KEY (id)
 );
 
