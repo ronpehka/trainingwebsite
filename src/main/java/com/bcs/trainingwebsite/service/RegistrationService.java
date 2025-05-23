@@ -75,8 +75,8 @@ public class RegistrationService {
         Role roleCoach = roleRepository.findById(COACH).get();
         User user = userMapper.toCoach(coachProfileDto);
         user.setRole(roleCoach);
-        handleAddCoachImageData(user, coachProfileDto);
         userRepository.save(user);
+        handleAddCoachImageData(user, coachProfileDto);
         return user;
     }
 

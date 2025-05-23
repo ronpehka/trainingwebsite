@@ -169,7 +169,7 @@ ALTER TABLE coach_sport ADD CONSTRAINT coach_sport_sport
 -- Reference: coach_image (table: coach_image)
 ALTER TABLE coach_image ADD CONSTRAINT coach_image
     FOREIGN KEY (user_id)
-        REFERENCES coach_image (id)
+        REFERENCES "user"(id)
         NOT DEFERRABLE
             INITIALLY IMMEDIATE
 
