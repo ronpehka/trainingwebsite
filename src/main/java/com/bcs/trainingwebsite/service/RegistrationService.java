@@ -3,6 +3,8 @@ package com.bcs.trainingwebsite.service;
 import com.bcs.trainingwebsite.controller.registration.dto.CoachProfile;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
+import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
+import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileMapper;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
@@ -13,6 +15,9 @@ import com.bcs.trainingwebsite.persistance.user.UserMapper;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILABLE;
 
@@ -28,6 +33,7 @@ public class RegistrationService {
     private final ProfileMapper profileMapper;
     public static final int CUSTOMER = 3;
     private static final int COACH = 2;
+    private final CoachImageRepository coachImageRepository;
 
     public void addNewCustomer(CustomerProfile customerProfile) {
         validateEmailIsAvailable(customerProfile.getEmail());
@@ -75,4 +81,6 @@ public class RegistrationService {
             throw new ForbiddenException(EMAIL_UNAVAILABLE.getMessage(), EMAIL_UNAVAILABLE.getErrorCode());
         }
     }
+
+
 }

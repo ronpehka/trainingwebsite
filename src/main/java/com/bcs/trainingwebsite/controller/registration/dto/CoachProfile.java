@@ -8,4 +8,5 @@ import lombok.EqualsAndHashCode;
 public class CoachProfile extends CustomerProfile {
     private String phoneNumber;
     private String description;
+    private String imageData;
 }

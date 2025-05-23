@@ -6,8 +6,9 @@ import com.bcs.trainingwebsite.util.ImageConverter;
 public interface CoachImageMapper {
 
     @Mapping(source = "id",target = "id")
-    @Mapping(source = "coachImage",target = "coachImage")
-    @Mapping(source = "data",target = "data")
+    @Mapping(source = "user_id",target = "user_id")
+    @Mapping(source = "imageData",target = "imageData")
+
     CoachImage toCoachImage(CoachImage coachImage);
 
   @Named("toByteArray")
