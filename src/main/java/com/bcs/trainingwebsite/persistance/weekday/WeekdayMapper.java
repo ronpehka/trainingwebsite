@@ -15,7 +15,7 @@ public interface WeekdayMapper {
     @Mapping(source = "id", target = "weekdayId")
     @Mapping(source = "shortField", target = "weekdayName")
     @Mapping(source = "number", target = "weekdayNumber")
-    @Mapping(constant = "true", target="available")
+    @Mapping(constant = "false", target="available")
     WeekDayInfo toWeekDayInfo(Weekday weekday);
 
     List<WeekDayInfo> toWeekDayInfos(List<Weekday> weekdays);
