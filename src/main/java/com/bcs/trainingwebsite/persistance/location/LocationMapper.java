@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.persistance.location;
 
+import com.bcs.trainingwebsite.controller.location.dto.LocationDto;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +16,11 @@ public interface LocationMapper {
 
     LocationInfo toLocationInfo(Location location);
     List<LocationInfo> toLocationInfos(List<Location> locations);
+
+    @Mapping(source = "", target = "")
+    @Mapping(source = "", target = "")
+    @Mapping(source = "", target = "")
+    @Mapping(source = "", target = "")
+    Location toLocation(LocationDto locationDto)
 
 }
