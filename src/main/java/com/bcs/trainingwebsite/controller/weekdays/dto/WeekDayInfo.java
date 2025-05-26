@@ -7,4 +7,5 @@ public class WeekDayInfo {
     private Integer weekdayId;
     private String weekdayName;
     private Integer weekdayNumber;
+    private boolean isAvailable;
 }

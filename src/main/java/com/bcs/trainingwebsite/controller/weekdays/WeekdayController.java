@@ -1,6 +1,7 @@
 package com.bcs.trainingwebsite.controller.weekdays;
 
 
+import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
 import com.bcs.trainingwebsite.controller.weekdays.dto.WeekDayInfo;
 import com.bcs.trainingwebsite.service.weekday.WeekDayService;
 import lombok.RequiredArgsConstructor;
