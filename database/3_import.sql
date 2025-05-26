@@ -16,11 +16,13 @@ INSERT INTO training.sport (id, name) VALUES (default, 'pesapall');
 
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 1, 'admin@admin.ee', '123', 'A');
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach@coach.ee', '123', 'A');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach2@coach.ee', '123', 'A');
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client@client.ee', '123', 'A');
 INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client2@client.ee', '123', 'D');
 
-INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone,date_of_birth, gender) VALUES (default, 3, 'Jaan', 'Uss', null, 'client@client.ee', '44444433', '20-11-1998','M');
-INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone,date_of_birth, gender) VALUES (default, 2, 'Nipi', 'Tiri', 'Ma olen ülikõva treener', 'coach@coach.ee', '112', '20-06-1993','N');
+INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender) VALUES (default, 4, 'Jaan', 'Uss', null, 'client@client.ee', '44444433', '1998-11-20', 'M');
+INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender) VALUES (default, 2, 'Nipi', 'Tiri', 'Ma olen ülikõva treener', 'coach@coach.ee', '112', '1993-06-20', 'N');
+INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender) VALUES (default, 3, 'Mart', 'Tamm', 'Olen soodne treener', 'coach2@coach.ee', '55111222', '2017-05-12', 'M');
 
 
 INSERT INTO training.district (id, name) VALUES (default, 'Haabersti');
