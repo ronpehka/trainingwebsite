@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.service.weekday;
 
+import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
 import com.bcs.trainingwebsite.controller.weekdays.dto.WeekDayInfo;
 import com.bcs.trainingwebsite.persistance.weekday.Weekday;
 import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
@@ -17,6 +18,7 @@ public class WeekDayService {
 
 
     public List<WeekDayInfo> getAllWeekDays() {
+
         List<Weekday> weekdays = weekdayRepository.findAll();
         return weekdayMapper.toWeekDayInfos(weekdays);
     }
