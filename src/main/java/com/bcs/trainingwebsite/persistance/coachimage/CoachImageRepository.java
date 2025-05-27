@@ -13,8 +13,8 @@ public interface CoachImageRepository extends JpaRepository<CoachImage, Integer>
     @Query("select c from CoachImage c where c.user.id = :userId")
     Optional<CoachImage> findCoachImageBy(Integer userId);
 
-    @Query("select c from CoachImage c where c.user.id = :id")
-    CoachImage findImageBy(Integer id);
+    @Query("select c from CoachImage c where c.user.id = :coachUserId")
+   Optional <CoachImage> findImageBy(Integer coachUserId);
 
     Integer id(Integer id);
 

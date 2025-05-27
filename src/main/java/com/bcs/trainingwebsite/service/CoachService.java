@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +59,13 @@ public class CoachService {
             List<SportInfo> sportInfos = sportMapper.toSportInfos(sports);
             coachInfo.setSports(sportInfos);
 
-            CoachImage coachImage = coachImageRepository.findImageBy(coachInfo.getCoachUserId());
-            byte[] bytes = coachImage.getData();
-            String imageData = ImageConverter.bytesToString(bytes);
-            coachInfo.setImageData(imageData);
+            Optional<CoachImage> optionalCoachImage = coachImageRepository.findImageBy(coachInfo.getCoachUserId());
+            if (optionalCoachImage.isPresent()) {
+                byte[] bytes = optionalCoachImage.get().getData();
+                String imageData = ImageConverter.bytesToString(bytes);
+                coachInfo.setImageData(imageData);
+            }
+
 
 
         }

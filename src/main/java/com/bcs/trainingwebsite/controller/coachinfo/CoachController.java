@@ -15,7 +15,7 @@ public class CoachController {
 
     private final CoachService coachService;
 
-    @GetMapping("/coaches/info")
+    @GetMapping("/coach-info")
     public List<CoachInfo> findAllCoachesInfo() {
         List<CoachInfo> allCoachesInfo = coachService.findAllCoachesInfo();
         return allCoachesInfo;
