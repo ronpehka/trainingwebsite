@@ -157,7 +157,7 @@ public class TrainingInfoService {
 
                 boolean isOverlapping = newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
                 if (isOverlapping) {
-                    throw new ForbiddenException("Treener ei saa anda kahte trenni korraga", 999);
+                    throw new ForbiddenException(Error.INCORRECT_TRAINING_TIME.getMessage(), Error.INCORRECT_TRAINING_TIME.getErrorCode());
                 }
             }
         }

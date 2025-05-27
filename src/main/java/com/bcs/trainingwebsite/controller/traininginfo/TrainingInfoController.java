@@ -15,7 +15,7 @@ public class TrainingInfoController {
     private final TrainingInfoService trainingInfoService;
 
 
-    @PostMapping("/add-new-training")
+    @PostMapping("/new-training")
     public void addNewTraining(@RequestBody TrainingDto trainingDto) {
         trainingInfoService.addNewTraining(trainingDto);
     }
