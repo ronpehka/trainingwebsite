@@ -305,5 +305,6 @@ ALTER TABLE "user" ADD CONSTRAINT user_role
             INITIALLY IMMEDIATE
 ;
 
+
 -- End of file.
 

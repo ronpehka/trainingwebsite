@@ -1,6 +1,5 @@
 package com.bcs.trainingwebsite.persistance.district;
 
-import com.bcs.trainingwebsite.persistance.location.Location;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,4 +20,5 @@ public class District {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
 }

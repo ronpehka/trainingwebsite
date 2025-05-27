@@ -10,5 +10,7 @@ public interface LocationImageMapper {
     LocationImage toLocationImage(LocationInfo locationInfo);
 
     @Named("toByteArray")
-    static byte[] toByteArray(String imageData) {return ImageConverter.stringToBytes(imageData);}
+    static byte[] toByteArray(String imageData) {
+        return ImageConverter.stringToBytes(imageData);
+    }
 }

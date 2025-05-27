@@ -1,7 +1,9 @@
 package com.bcs.trainingwebsite.service;
 
 import com.bcs.trainingwebsite.controller.location.dto.DistrictInfo;
+import com.bcs.trainingwebsite.controller.location.dto.LocationDto;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
+import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.district.District;
 import com.bcs.trainingwebsite.persistance.district.DistrictMapper;
 import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +57,16 @@ public class LocationService {
                 .map(DistrictInfo::getDistrictName)
                 .ifPresent(locationInfo::setDistrictName);
     }
+
+    public void addNewLocation(LocationDto locationDto) {
+        District district = districtRepository.findById(locationDto.getDistrictId())
+                .orElseThrow(() -> new ForeignKeyNotFoundException("districtId", locationDto.getDistrictId()));
+        Location location = locationMapper.toLocation(locationDto);
+        location.setDistrict(district);
+        locationRepository.save(location);
+
+    }
+
 
 }
 

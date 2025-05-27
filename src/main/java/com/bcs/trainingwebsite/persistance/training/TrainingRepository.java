@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface TrainingRepository extends JpaRepository<Training, Integer> {
@@ -14,6 +15,9 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
 
     @Query("select t from Training t where t.coachUser = :user and t.status = :status")
     List<Training> findTrainingsBy(User user, String status);
+
+    @Query("select t from Training t where t.id = :trainingId and t.status = :status")
+    Optional<Training> findTrainingBy(Integer trainingId, String status);
 
 
 }

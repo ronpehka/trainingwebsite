@@ -10,7 +10,7 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
 
 
     @Query("select l from Location l where l.name = :name and l.address = :address")
-    Optional<Location> findLocationBy(String name, String address);
+    Optional<Location> findLocationBy(@Param("name") String name, @Param("address") String address);
 
     @Query("select (count(l) > 0) from Location l where l.name = :name and l.address = :address")
     boolean locationExists(String name, String address);

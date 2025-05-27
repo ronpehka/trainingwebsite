@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 public class LocationDto {
     private Integer districtId;
     private String locationName;
-    private String address;
-    private String districtName;
-    private String
-
+    private String locationAddress;
+    private String openingHours;
 }
