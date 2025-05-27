@@ -43,6 +43,11 @@ public class Location {
     @Size(max = 255)
     @NotNull
     @Column(name = "openinghours", nullable = false)
-    private String openinghours;
+    private String openingHours;
+
+    @Size(max = 500)
+    @NotNull
+    @Column(name = "imageurl", nullable = false)
+    private String imageUrl;
 
 }

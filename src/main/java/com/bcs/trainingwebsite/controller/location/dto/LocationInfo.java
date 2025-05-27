@@ -8,7 +8,7 @@ public class LocationInfo {
     private Integer locationId;
     private String locationName;
     private String locationAddress;
-    private String imageData;
+    private String imageUrl;
     private Integer districtId;
     private String districtName;
     private String openingHours;
