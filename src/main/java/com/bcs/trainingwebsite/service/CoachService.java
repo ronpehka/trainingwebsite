@@ -4,6 +4,8 @@ package com.bcs.trainingwebsite.service;
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachInfo;
 import com.bcs.trainingwebsite.controller.coachinfo.dto.SportInfo;
+import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
+import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
 import com.bcs.trainingwebsite.persistance.coachsport.CoachSport;
 import com.bcs.trainingwebsite.persistance.coachsport.CoachSportMapper;
@@ -15,6 +17,7 @@ import com.bcs.trainingwebsite.persistance.sport.Sport;
 import com.bcs.trainingwebsite.persistance.sport.SportMapper;
 import com.bcs.trainingwebsite.persistance.sport.SportRepository;
 import com.bcs.trainingwebsite.persistance.training.TrainingRepository;
+import com.bcs.trainingwebsite.util.ImageConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,7 @@ public class CoachService {
     private final CoachSportMapper coachSportMapper;
     private final SportRepository sportRepository;
     private final SportMapper sportMapper;
+    private final CoachImageMapper coachImageMapper;
 
     public List<CoachInfo> findAllCoachesInfo() {
         List<Profile> profiles = profileRepository.findProfilesBy("coach", Status.ACTIVE.getCode());
@@ -41,21 +45,31 @@ public class CoachService {
         List<Sport> sports = new ArrayList<>();
 
 
+
+
         for (CoachInfo coachInfo : coachInfos) {
             Integer coachUserId = coachInfo.getCoachUserId();
             List<CoachSport> coachSports = coachSportRepository.findCoachSportsBy(coachUserId);
-
-
             for (CoachSport coachSport : coachSports) {
                 Sport sport = sportRepository.findById(coachSport.getId()).orElseThrow();
                 sports.add(sport);
-
             }
+
             List<SportInfo> sportInfos = sportMapper.toSportInfos(sports);
             coachInfo.setSports(sportInfos);
 
-        }
+            CoachImage coachImage = coachImageRepository.findImageBy(coachInfo.getCoachUserId());
+            byte[] bytes = coachImage.getData();
+            String imageData = ImageConverter.bytesToString(bytes);
+            coachInfo.setImageData(imageData);
 
+
+        }
+//        private void handleGetCoachImage () {
+//            Integer coachUserId = coachInfo.getCoachUserId();
+//            List<CoachImage> coachImages = coachImageRepository.getCoachImageById(coachUserId);
+//            coachImageMapper.toCoachInfos(coachImages);
+//        }
 
         return coachInfos;
     }
