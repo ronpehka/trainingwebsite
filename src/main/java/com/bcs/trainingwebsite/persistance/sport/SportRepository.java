@@ -11,4 +11,5 @@ public interface SportRepository extends JpaRepository<Sport, Integer> {
 
     @Query("select s from Sport s where s.name = :name")
     Optional<Sport> findSportBy( String name);
+
 }

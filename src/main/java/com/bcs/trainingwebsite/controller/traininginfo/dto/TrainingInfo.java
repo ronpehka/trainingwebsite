@@ -1,5 +1,6 @@
 package com.bcs.trainingwebsite.controller.traininginfo.dto;
 
+import com.bcs.trainingwebsite.controller.sport.dto.SportInfo;
 import lombok.Data;
 
 import java.util.List;

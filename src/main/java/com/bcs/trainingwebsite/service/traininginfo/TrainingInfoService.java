@@ -192,6 +192,11 @@ public class TrainingInfoService {
             training.setSport(sport);
         }
     }
+
+    public List<TrainingInfo> getTrainingsBySportName(String sportName) {
+        List<Training> trainings = trainingRepository.findTrainingsByName(sportName);
+        return  trainingMapper.toTrainingInfos(trainings);
+    }
 }
 
 

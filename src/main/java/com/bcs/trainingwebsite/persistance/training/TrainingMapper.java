@@ -3,6 +3,7 @@ package com.bcs.trainingwebsite.persistance.training;
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
+import com.bcs.trainingwebsite.persistance.sport.SportMapper;
 import com.bcs.trainingwebsite.util.DateConverter;
 import com.bcs.trainingwebsite.util.TimeConverter;
 import org.mapstruct.*;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, imports = {Status.class})
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, imports = {Status.class}, uses = {SportMapper.class})
 public interface TrainingMapper {
 
 
