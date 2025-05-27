@@ -11,13 +11,18 @@ import java.util.Optional;
 public interface CoachImageRepository extends JpaRepository<CoachImage, Integer> {
 
 
-    @Query("select c from CoachImage c where c.user.id = ?1")
-    Optional<CoachImage> findCoachImageByUser(Integer id);
+    @Query("select c from CoachImage c where c.user.id = :userId")
+    Optional<CoachImage> findCoachImageBy(Integer userId);
 
     @Transactional
     @Modifying
     @Query("delete from CoachImage c where c.data = ?1")
     int deleteCoachImageByData(byte[] data);
 
+
+    @Transactional
+    @Modifying
+    @Query("delete from CoachImage l where l.data = :coachImage")
+    void deleteCoachImageBy(CoachImage coachImage);
 
 }
