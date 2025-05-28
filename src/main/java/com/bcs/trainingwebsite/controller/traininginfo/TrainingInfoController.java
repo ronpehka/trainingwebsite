@@ -16,9 +16,10 @@ public class TrainingInfoController {
 
 
     @PostMapping("/new-training")
-    public void addNewTraining(@RequestBody TrainingDto trainingDto) {
-        trainingInfoService.addNewTraining(trainingDto);
+    public Integer addNewTraining(@RequestBody TrainingDto trainingDto) {
+       return trainingInfoService.addNewTraining(trainingDto);
     }
+
 
     @GetMapping("/training-info")
     public List<TrainingInfo> getTrainingInfos(
@@ -43,5 +44,6 @@ public class TrainingInfoController {
     public List<TrainingInfo> getTrainingsBySportName(@RequestParam String sportName) {
         return trainingInfoService.getTrainingsBySportName(sportName);
     }
+
 
 }

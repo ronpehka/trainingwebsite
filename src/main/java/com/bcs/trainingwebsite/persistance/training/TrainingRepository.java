@@ -26,5 +26,8 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
     @Query("select t from Training t where t.sport.name = :sportName")
     List<Training> findTrainingsByName(@Param("sportName") String sportName);
 
+    @Query("select t from Training t where t.coachUser.id = :coachId and t.id = :trainingId")
+    Training findTrainingBy(Integer coachId,  Integer trainingId);
+
 
 }

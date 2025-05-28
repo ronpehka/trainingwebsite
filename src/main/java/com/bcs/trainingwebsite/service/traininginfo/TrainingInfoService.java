@@ -91,7 +91,7 @@ public class TrainingInfoService {
 
 
     @Transactional
-    public void addNewTraining(TrainingDto trainingDto) {
+    public Integer addNewTraining(TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
 
         Sport sport = getSport(trainingDto);
@@ -109,6 +109,7 @@ public class TrainingInfoService {
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
 
         trainingDateRepository.saveAll(trainingDates);
+        return training.getId();
     }
 
     private Sport getSport(TrainingDto trainingDto) {
@@ -209,6 +210,7 @@ public class TrainingInfoService {
 
         return trainingInfos;
     }
+
 }
 
 

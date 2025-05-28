@@ -4,6 +4,7 @@ package com.bcs.trainingwebsite.service;
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachInfo;
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachSportInfo;
+import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
@@ -45,14 +46,11 @@ public class CoachService {
         List<CoachInfo> coachInfos = profileMapper.toCoachInfos(profiles);
         List<Sport> sports = new ArrayList<>();
 
-
-
-
         for (CoachInfo coachInfo : coachInfos) {
             Integer coachUserId = coachInfo.getCoachUserId();
             List<CoachSport> coachSports = coachSportRepository.findCoachSportsBy(coachUserId);
             for (CoachSport coachSport : coachSports) {
-                Sport sport = sportRepository.findById(coachSport.getId()).orElseThrow();
+                Sport sport = sportRepository.findById(coachSport.getSport().getId()).orElseThrow(()-> new ForeignKeyNotFoundException("sportId", coachSport.getId()));
                 sports.add(sport);
             }
 
