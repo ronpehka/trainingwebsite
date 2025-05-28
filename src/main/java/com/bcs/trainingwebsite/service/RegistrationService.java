@@ -14,12 +14,8 @@ import com.bcs.trainingwebsite.persistance.role.RoleRepository;
 import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.user.UserMapper;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
-import com.bcs.trainingwebsite.util.ImageConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
-import java.util.Optional;
 
 import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILABLE;
 
@@ -88,18 +84,14 @@ public class RegistrationService {
     }
 
 
-    private void handleAddCoachImageData(User user,CoachProfileDto coachProfileDto) {
+    private void handleAddCoachImageData(User user, CoachProfileDto coachProfileDto) {
 
         CoachImage coachImage = coachImageMapper.toCoachImage(coachProfileDto);
         coachImage.setUser(user);
         coachImageRepository.save(coachImage);
 
 
-
     }
-
-
-
 
 
 }
