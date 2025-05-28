@@ -38,9 +38,13 @@ INSERT INTO training.training (id, coach_user_id, name, description, gender, sta
 INSERT INTO training.training (id, coach_user_id, name, description, gender, start_date, end_date, start_time, end_time, sport_id, status, max_limit) VALUES (default, 2, 'TU11 pesapall', 'Tüdrukute pesapall', 'N', '2025-05-20', '2026-11-11', '12:00:00', '13:30:00', 3, 'A', 20);
 INSERT INTO training.training (id, coach_user_id, name, description, gender, start_date, end_date, start_time, end_time, sport_id, status, max_limit) VALUES (default, 2, 'PU10 jalgpall', 'Poiste jalgpall', 'M', '2025-06-11', '2026-08-04', '16:30:00', '18:00:00', 2, 'A', 20);
 
-INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 2, 1);
+INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 1, 1);
 INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 2, 2);
 INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 2, 3);
+INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 3, 1);
+INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 3, 2);
+INSERT INTO training.coach_sport (id, coach_user_id, sport_id) VALUES (default, 3, 3);
+
 
 INSERT INTO training.training_location (id, training_id, location_id, status) VALUES (default, 1, 1, 'A');
 INSERT INTO training.training_location (id, training_id, location_id, status) VALUES (default, 2, 2, 'A');
