@@ -50,7 +50,7 @@ public class CoachService {
             Integer coachUserId = coachInfo.getCoachUserId();
             List<CoachSport> coachSports = coachSportRepository.findCoachSportsBy(coachUserId);
             for (CoachSport coachSport : coachSports) {
-                Sport sport = sportRepository.findById(coachSport.getSport().getId()).orElseThrow(()-> new ForeignKeyNotFoundException("sportId", coachSport.getId()));
+                Sport sport = sportRepository.findById(coachSport.getSport().getId()).orElseThrow(() -> new ForeignKeyNotFoundException("sportId", coachSport.getId()));
                 sports.add(sport);
             }
 
@@ -63,7 +63,6 @@ public class CoachService {
                 String imageData = ImageConverter.bytesToString(bytes);
                 coachInfo.setImageData(imageData);
             }
-
 
 
         }
