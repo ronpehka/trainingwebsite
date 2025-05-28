@@ -150,6 +150,7 @@ public class TrainingInfoService {
         LocalTime newStart = TimeConverter.stringToLocalTime(trainingDto.getStartTime());
         LocalTime newEnd = TimeConverter.stringToLocalTime(trainingDto.getEndTime());
 
+
         for (TrainingDate newDate : newTrainingDates) {
             Optional<TrainingDate> existing = trainingDateRepository.findTrainingDateBy(userCoach, newDate.getDate());
             if (existing.isPresent()) {
@@ -165,7 +166,7 @@ public class TrainingInfoService {
         }
     }
 
-
+    @Transactional
     public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
