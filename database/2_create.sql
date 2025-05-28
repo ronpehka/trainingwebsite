@@ -26,6 +26,7 @@ CREATE TABLE location (
                           lat decimal(18,15)  NULL,
                           long decimal(18,15)  NULL,
                             openinghours varchar(255) NULL,
+                            imageurl varchar(500) NULL,
                           CONSTRAINT location_pk PRIMARY KEY (id)
 );
 
@@ -304,7 +305,6 @@ ALTER TABLE "user" ADD CONSTRAINT user_role
         NOT DEFERRABLE
             INITIALLY IMMEDIATE
 ;
-
 
 -- End of file.
 

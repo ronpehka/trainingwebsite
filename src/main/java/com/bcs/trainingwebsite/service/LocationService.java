@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +35,9 @@ public class LocationService {
         List<Location> locations = locationRepository.findAll();
         List<LocationInfo> locationInfos = locationMapper.toLocationInfos(locations);
 
-        for (LocationInfo locationInfo : locationInfos) {
-            getLocationImageIfExists(locationInfo);
-        }
+//        for (LocationInfo locationInfo : locationInfos) {
+//            getLocationImageIfExists(locationInfo);
+//        }
         for (LocationInfo locationInfo : locationInfos) {
             getDistrictNameIfExists(locationInfo);
         }
@@ -44,12 +45,12 @@ public class LocationService {
     }
 
 
-    private void getLocationImageIfExists(LocationInfo locationInfo) {
-        locationImageRepository.findLocationImageBy(locationInfo.getLocationId())
-                .map(LocationImage::getData)
-                .map(Base64.getEncoder()::encodeToString)
-                .ifPresent(locationInfo::setImageData);
-    }
+//    private void getLocationImageIfExists(LocationInfo locationInfo) {
+//        locationImageRepository.findLocationImageBy(locationInfo.getLocationId())
+//                .map(LocationImage::getData)
+//                .map(Base64.getEncoder()::encodeToString)
+//                .ifPresent(locationInfo::setImageData);
+
 
     private void getDistrictNameIfExists(LocationInfo locationInfo) {
         districtRepository.findById(locationInfo.getDistrictId())

@@ -35,6 +35,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -191,6 +192,22 @@ public class TrainingInfoService {
             Sport sport = getSport(trainingDto);
             training.setSport(sport);
         }
+    }
+
+    public List<TrainingInfo> getTrainingsBySportName(String sportName) {
+        List<Training> trainings = trainingRepository.findTrainingsByName(sportName);
+        return  trainingMapper.toTrainingInfos(trainings);
+    }
+
+    public List<TrainingInfo> getTrainingsBySportId(Integer sportId) {
+        List<TrainingInfo> trainingInfos = trainingRepository.findTrainingsBySportId(sportId)
+                .stream()
+                .map(trainingMapper::toTrainingInfo)
+                .collect(Collectors.toList());
+
+        addRemainingInformationToTrainingInfos(trainingInfos);  // << ADD THIS LINE
+
+        return trainingInfos;
     }
 }
 

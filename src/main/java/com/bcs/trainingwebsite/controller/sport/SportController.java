@@ -19,4 +19,5 @@ public class SportController {
     public List<SportInfo> getAllSports(){
        return sportService.getAllSports();
     }
+
 }

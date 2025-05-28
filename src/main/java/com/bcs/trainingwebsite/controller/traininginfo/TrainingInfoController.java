@@ -20,14 +20,28 @@ public class TrainingInfoController {
         trainingInfoService.addNewTraining(trainingDto);
     }
 
-
     @GetMapping("/training-info")
-    public List<TrainingInfo> getAllTrainingInfo() {
-        return trainingInfoService.getAllTrainingInfo();
+    public List<TrainingInfo> getTrainingInfos(
+            @RequestParam(required = false) Integer sportId,
+            @RequestParam(required = false) String sportName) {
+
+        if (sportId != null) {
+            return trainingInfoService.getTrainingsBySportId(sportId);
+        } else if (sportName != null && !sportName.isEmpty()) {
+            return trainingInfoService.getTrainingsBySportName(sportName);
+        } else {
+            return trainingInfoService.getAllTrainingInfo();
+        }
     }
 
     @PutMapping("/training-info")
     public void updateTrainingInfo(@RequestParam Integer trainingId, @RequestBody TrainingDto trainingDto) {
         trainingInfoService.updateTrainingInfo(trainingId, trainingDto);
     }
+
+    @GetMapping("/training-info/by-sport")
+    public List<TrainingInfo> getTrainingsBySportName(@RequestParam String sportName) {
+        return trainingInfoService.getTrainingsBySportName(sportName);
+    }
+
 }
