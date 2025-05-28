@@ -5,6 +5,7 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
+import com.bcs.trainingwebsite.controller.weekdays.dto.WeekDayInfo;
 import com.bcs.trainingwebsite.infrastructure.error.Error;
 import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
@@ -25,6 +26,8 @@ import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayMapper
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayRepository;
 import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
+import com.bcs.trainingwebsite.persistance.weekday.Weekday;
+import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
 import com.bcs.trainingwebsite.util.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,6 +54,7 @@ public class TrainingInfoService {
     private final TrainingDateRepository trainingDateRepository;
     private final SportRepository sportRepository;
     private final UserRepository userRepository;
+    private final WeekdayRepository weekdayRepository;
 
     public List<TrainingInfo> getAllTrainingInfo() {
         List<Training> trainings = trainingRepository.findTrainingsBy(Status.ACTIVE.getCode());
@@ -58,6 +62,45 @@ public class TrainingInfoService {
         addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
     }
+
+    @Transactional
+    public Integer addNewTraining(TrainingDto trainingDto) {
+        User userCoach = getUserCoach(trainingDto);
+
+        Sport sport = getSport(trainingDto);
+
+        Training training = trainingMapper.toTraining(trainingDto);
+        training.setCoachUser(userCoach);
+        training.setSport(sport);
+        trainingRepository.save(training);
+
+        // Determine valid training dates
+        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
+        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
+
+        // Check for overlapping training sessions
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+        trainingDateRepository.saveAll(trainingDates);
+
+        List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
+        trainingWeekdayRepository.saveAll(trainingWeekdays);
+        return training.getId();
+    }
+
+    private List<TrainingWeekday> getTrainingWeekdays(TrainingDto trainingDto, Training training) {
+        return trainingDto.getTrainingDays().stream()
+                .filter(TrainingWeekdayInfo::isAvailable)
+                .map(weekDayInfo -> {
+                    Weekday weekday = weekdayRepository.findById(weekDayInfo.getWeekdayId())
+                            .orElseThrow(() -> new ForeignKeyNotFoundException("weekdayId", weekDayInfo.getWeekdayId()));
+                    TrainingWeekday trainingWeekday = new TrainingWeekday();
+                    trainingWeekday.setTraining(training);
+                    trainingWeekday.setWeekday(weekday);
+                    return trainingWeekday;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     private void addRemainingInformationToTrainingInfos(List<TrainingInfo> trainingInfos) {
         for (TrainingInfo trainingInfo : trainingInfos) {
@@ -89,28 +132,6 @@ public class TrainingInfoService {
         trainingInfo.setCoachFullName(profile.getFullName());
     }
 
-
-    @Transactional
-    public Integer addNewTraining(TrainingDto trainingDto) {
-        User userCoach = getUserCoach(trainingDto);
-
-        Sport sport = getSport(trainingDto);
-
-        Training training = trainingMapper.toTraining(trainingDto);
-        training.setCoachUser(userCoach);
-        training.setSport(sport);
-        trainingRepository.save(training);
-
-        // Determine valid training dates
-        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
-        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
-
-        // Check for overlapping training sessions
-        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
-
-        trainingDateRepository.saveAll(trainingDates);
-        return training.getId();
-    }
 
     private Sport getSport(TrainingDto trainingDto) {
         return sportRepository.findById(trainingDto.getSportId())
@@ -180,10 +201,13 @@ public class TrainingInfoService {
 
         // Check for overlapping training sessions
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
-
         // Save valid training dates
         trainingDateRepository.deleteByTrainingId(training.getId());
         trainingDateRepository.saveAll(trainingDates);
+        List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
+        trainingWeekdayRepository.deleteBy(trainingId);
+        trainingWeekdayRepository.saveAll(trainingWeekdays);
+
 
     }
 
