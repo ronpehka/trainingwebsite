@@ -22,7 +22,7 @@ public interface LocationMapper {
 
     @Mapping(source = "locationName", target = "name")
     @Mapping(source = "locationAddress", target = "address")
-    @Mapping(source = "openingHours", target = "openinghours")
+    @Mapping(source = "openingHours", target = "openingHours")
     Location toLocation (LocationDto locationDto);
 
 }
