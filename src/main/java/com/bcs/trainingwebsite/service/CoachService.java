@@ -3,7 +3,7 @@ package com.bcs.trainingwebsite.service;
 
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachInfo;
-import com.bcs.trainingwebsite.controller.coachinfo.dto.SportInfo;
+import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachSportInfo;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
@@ -56,8 +56,8 @@ public class CoachService {
                 sports.add(sport);
             }
 
-            List<SportInfo> sportInfos = sportMapper.toSportInfos(sports);
-            coachInfo.setSports(sportInfos);
+            List<CoachSportInfo> coachSportInfos = sportMapper.toCoachSportInfos(sports);
+            coachInfo.setSports(coachSportInfos);
 
             Optional<CoachImage> optionalCoachImage = coachImageRepository.findImageBy(coachInfo.getCoachUserId());
             if (optionalCoachImage.isPresent()) {

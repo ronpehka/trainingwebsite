@@ -10,6 +10,6 @@ public class CoachInfo {
     private String coachFullName;
     private String email;
     private String phoneNumber;
-    private List<SportInfo> sports;
+    private List<CoachSportInfo> sports;
     private String imageData;
 }

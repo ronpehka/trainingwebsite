@@ -1,10 +1,8 @@
 package com.bcs.trainingwebsite.persistance.profile;
 
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachInfo;
-import com.bcs.trainingwebsite.controller.coachinfo.dto.SportInfo;
 import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSport;
 import org.mapstruct.*;
 
 import java.util.List;
