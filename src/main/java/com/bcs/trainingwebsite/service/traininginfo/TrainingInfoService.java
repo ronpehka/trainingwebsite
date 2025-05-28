@@ -199,16 +199,21 @@ public class TrainingInfoService {
         return  trainingMapper.toTrainingInfos(trainings);
     }
 
+    public List<TrainingInfo> getTrainingsBySportIdOrAll(Integer sportId) {
+        if (sportId != null && sportId !=0) {
+            return getTrainingsBySportId(sportId);
+        } else {
+            return getAllTrainingInfo();
+        }
+    }
+
     public List<TrainingInfo> getTrainingsBySportId(Integer sportId) {
-        List<TrainingInfo> trainingInfos = trainingRepository.findTrainingsBySportId(sportId)
-                .stream()
-                .map(trainingMapper::toTrainingInfo)
-                .collect(Collectors.toList());
-
-        addRemainingInformationToTrainingInfos(trainingInfos);  // << ADD THIS LINE
-
+        List<Training> trainings = trainingRepository.findTrainingsBySportId(sportId, Status.ACTIVE.getCode());
+        List<TrainingInfo> trainingInfos = trainingMapper.toTrainingInfos(trainings);
+        addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
     }
+
 }
 
 
