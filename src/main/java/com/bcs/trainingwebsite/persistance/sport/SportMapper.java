@@ -8,8 +8,12 @@ import java.util.List;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SportMapper {
 
+    @Mapping(source = "name",target = "sportType")
     @Mapping(source = "id", target = "sportId")
     @Mapping(source = "name", target = "sportName")
     SportInfo toSportInfo(Sport sport);
+
     List<SportInfo> toSportInfos(List<Sport>sports);
+
+
 }
