@@ -5,7 +5,6 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDay;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
-import com.bcs.trainingwebsite.controller.weekdays.dto.WeekDayInfo;
 import com.bcs.trainingwebsite.infrastructure.error.Error;
 import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
@@ -192,7 +191,7 @@ public class TrainingInfoService {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
                 .orElseThrow(() -> new DataNotFoundException(Error.INVALID_REQUEST.getMessage(), Error.INVALID_REQUEST.getErrorCode()));
-        trainingMapper.partialUpdate(training,trainingDto);
+        trainingMapper.partialUpdate(training, trainingDto);
         handleSportUpdate(trainingDto, training);
         trainingRepository.save(training);
         // Determine valid training dates
@@ -214,7 +213,7 @@ public class TrainingInfoService {
     private void handleSportUpdate(TrainingDto trainingDto, Training training) {
         Integer trainingDtoSportId = trainingDto.getSportId();
         Integer trainingSportId = training.getSport().getId();
-        if(!trainingDtoSportId.equals(trainingSportId)){
+        if (!trainingDtoSportId.equals(trainingSportId)) {
             Sport sport = getSport(trainingDto);
             training.setSport(sport);
         }
@@ -222,7 +221,7 @@ public class TrainingInfoService {
 
     public List<TrainingInfo> getTrainingsBySportName(String sportName) {
         List<Training> trainings = trainingRepository.findTrainingsByName(sportName);
-        return  trainingMapper.toTrainingInfos(trainings);
+        return trainingMapper.toTrainingInfos(trainings);
     }
 
     public List<TrainingInfo> getTrainingsBySportId(Integer sportId) {
@@ -236,6 +235,17 @@ public class TrainingInfoService {
         return trainingInfos;
     }
 
+    public TrainingDto getTrainingInfo(Integer trainingId, Integer coachId) {
+        Training training = trainingRepository.findTrainingBy(trainingId, coachId).orElseThrow(() -> new ForeignKeyNotFoundException("coachId", coachId));
+        TrainingDto trainingDto = trainingMapper.toTrainingDto(training);
+        trainingDto.setCoachUserId(coachId);
+        List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(trainingId);
+        List<TrainingWeekdayInfo> trainingWeekdayInfos = trainingWeekdayMapper.toTrainingWeekdayInfos(trainingWeekdays);
+        trainingDto.setTrainingDays(trainingWeekdayInfos);
+
+
+        return trainingDto;
+    }
 }
 
 

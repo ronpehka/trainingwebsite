@@ -46,6 +46,18 @@ public interface TrainingMapper {
     Training toTraining(TrainingDto trainingDto);
 
 
+    @Mapping(source="name",target="trainingName")
+    @Mapping(source="description",target="trainingDescription")
+    @Mapping(source = "sport.id", target = "sportId")
+    @Mapping(source="gender",target="trainingGender")
+    @Mapping(source="startDate",target="startDate")
+    @Mapping(source="endDate",target="endDate")
+    @Mapping(source="startTime",target="startTime")
+    @Mapping(source="endTime",target="endTime")
+    @Mapping(source="maxLimit",target="maxLimit")
+    TrainingDto toTrainingDto(Training training);
+
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "trainingName", target = "name")
     @Mapping(source = "trainingDescription", target = "description")

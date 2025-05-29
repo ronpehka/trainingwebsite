@@ -20,6 +20,11 @@ public class TrainingInfoController {
        return trainingInfoService.addNewTraining(trainingDto);
     }
 
+    @GetMapping("/training-info/{trainingId}")
+    public TrainingDto getTrainingInfo(@PathVariable Integer trainingId, @RequestParam Integer coachId){
+       return trainingInfoService.getTrainingInfo(trainingId, coachId);
+    }
+
 
     @GetMapping("/training-info")
     public List<TrainingInfo> getTrainingInfos(
