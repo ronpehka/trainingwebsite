@@ -22,5 +22,6 @@ public class TrainingInfo {
     private String districtName; //""
     private String sportType;
     private Integer maxLimit;
+    private Integer emptyPlaces;
 
 }

@@ -14,4 +14,8 @@ public enum Status {
     Status(String code) {
         this.code = code;
     }
+
+    public String getCode() {
+        return code;
+    }
 }

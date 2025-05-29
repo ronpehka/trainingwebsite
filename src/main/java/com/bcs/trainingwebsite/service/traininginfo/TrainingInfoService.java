@@ -13,6 +13,7 @@ import com.bcs.trainingwebsite.infrastructure.exception.PrimaryKeyNotFoundExcept
 import com.bcs.trainingwebsite.persistance.location.Location;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
+import com.bcs.trainingwebsite.persistance.register.RegisterRepository;
 import com.bcs.trainingwebsite.persistance.sport.Sport;
 import com.bcs.trainingwebsite.persistance.sport.SportRepository;
 import com.bcs.trainingwebsite.persistance.training.Training;
@@ -57,6 +58,7 @@ public class TrainingInfoService {
     private final SportRepository sportRepository;
     private final UserRepository userRepository;
     private final WeekdayRepository weekdayRepository;
+    private final RegisterRepository registerRepository;
 
     public List<TrainingInfo> getAllTrainingInfo() {
         List<Training> trainings = trainingRepository.findTrainingsBy(Status.ACTIVE.getCode());
@@ -109,6 +111,7 @@ public class TrainingInfoService {
             addCoachFullName(trainingInfo);
             addTrainingDays(trainingInfo);
             handleAddTrainingLocationInfo(trainingInfo);
+            addAvailablePlaces(trainingInfo);
         }
     }
 
@@ -134,6 +137,28 @@ public class TrainingInfoService {
         trainingInfo.setCoachFullName(profile.getFullName());
     }
 
+
+    @Transactional
+    public Integer addNewTraining(TrainingDto trainingDto) {
+        User userCoach = getUserCoach(trainingDto);
+
+        Sport sport = getSport(trainingDto);
+
+        Training training = trainingMapper.toTraining(trainingDto);
+        training.setCoachUser(userCoach);
+        training.setSport(sport);
+        trainingRepository.save(training);
+
+        // Determine valid training dates
+        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
+        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
+
+        // Check for overlapping training sessions
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+
+        trainingDateRepository.saveAll(trainingDates);
+        return training.getId();
+    }
 
     private Sport getSport(TrainingDto trainingDto) {
         return sportRepository.findById(trainingDto.getSportId())
@@ -203,6 +228,7 @@ public class TrainingInfoService {
 
         // Check for overlapping training sessions
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+
         // Save valid training dates
         trainingDateRepository.deleteBy(training.getId());
         trainingDateRepository.saveAll(trainingDates);
@@ -227,15 +253,23 @@ public class TrainingInfoService {
         return trainingMapper.toTrainingInfos(trainings);
     }
 
+    public List<TrainingInfo> getTrainingsBySportIdOrAll(Integer sportId) {
+        if (sportId != null && sportId !=0) {
+            return getTrainingsBySportId(sportId);
+        } else {
+            return getAllTrainingInfo();
+        }
+    }
+
     public List<TrainingInfo> getTrainingsBySportId(Integer sportId) {
-        List<TrainingInfo> trainingInfos = trainingRepository.findTrainingsBySportId(sportId)
-                .stream()
-                .map(trainingMapper::toTrainingInfo)
-                .collect(Collectors.toList());
-
-        addRemainingInformationToTrainingInfos(trainingInfos);  // << ADD THIS LINE
-
+        List<Training> trainings = trainingRepository.findTrainingsBySportId(sportId, Status.ACTIVE.getCode());
+        List<TrainingInfo> trainingInfos = trainingMapper.toTrainingInfos(trainings);
+        addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
+    }
+    private void addAvailablePlaces(TrainingInfo trainingInfo) {
+        int takenPlaces = registerRepository.countActiveRegistrationsByTrainingId(trainingInfo.getTrainingId());
+        trainingInfo.setEmptyPlaces(trainingInfo.getMaxLimit() - takenPlaces);
     }
 
     public TrainingDto getTrainingInfo(Integer trainingId) {

@@ -30,6 +30,7 @@ public interface TrainingMapper {
     @Mapping(constant = "", target = "address")
     @Mapping(constant = "", target = "locationName")
     @Mapping(constant = "", target = "districtName")
+    @Mapping(target = "emptyPlaces", ignore = true)
     TrainingInfo toTrainingInfo(Training training);
 
     List<TrainingInfo> toTrainingInfos(List<Training> trainings);

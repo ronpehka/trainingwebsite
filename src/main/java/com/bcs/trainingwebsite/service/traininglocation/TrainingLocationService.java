@@ -26,7 +26,7 @@ public class TrainingLocationService {
                 .orElseThrow(() -> new ForeignKeyNotFoundException("trainingId", trainingId));
 
         Location location = locationRepository.findById(locationId)
-                .orElseThrow(() -> new ForeignKeyNotFoundException("trainingId", trainingId));
+                .orElseThrow(() -> new ForeignKeyNotFoundException("locationId", locationId));
 
         TrainingLocation trainingLocation = new TrainingLocation();
         trainingLocation.setTraining(training);
