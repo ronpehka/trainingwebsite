@@ -28,6 +28,7 @@ import com.bcs.trainingwebsite.persistance.user.UserRepository;
 import com.bcs.trainingwebsite.persistance.weekday.Weekday;
 import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
 import com.bcs.trainingwebsite.util.TimeConverter;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -236,12 +238,34 @@ public class TrainingInfoService {
     }
 
     public TrainingDto getTrainingInfo(Integer trainingId) {
-        Training training = trainingRepository.getReferenceById(trainingId);
+        Training training = trainingRepository.findTrainingBy(trainingId, Status.ACTIVE.getCode()).orElseThrow(() -> new EntityNotFoundException("Training not found with id: " + trainingId));
         TrainingDto trainingDto = trainingMapper.toTrainingDto(training);
 
+        // Get all weekdays (assuming you have a method for this)
+        List<Weekday> allWeekdays = weekdayRepository.findAll();
+
+        // Get weekdays assigned to this training
         List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(trainingId);
-        List<TrainingWeekdayInfo> trainingWeekdayInfos = trainingWeekdayMapper.toTrainingWeekdayInfos(trainingWeekdays);
+
+        // Convert assigned weekdays to a set for quick lookup
+        Set<Integer> assignedWeekdayIds = trainingWeekdays.stream()
+                .map(tw -> tw.getWeekday().getId())  // adapt getter accordingly
+                .collect(Collectors.toSet());
+
+        // Map all weekdays to TrainingWeekdayInfo, mark available true if assigned
+        List<TrainingWeekdayInfo> trainingWeekdayInfos = allWeekdays.stream()
+                .map(weekday -> {
+                    TrainingWeekdayInfo info = new TrainingWeekdayInfo();
+                    info.setWeekdayId(weekday.getId());
+                    info.setWeekdayName(weekday.getShortField());
+                    info.setWeekdayNumber(weekday.getNumber());
+                    info.setAvailable(assignedWeekdayIds.contains(weekday.getId()));
+                    return info;
+                })
+                .collect(Collectors.toList());
+
         trainingDto.setTrainingDays(trainingWeekdayInfos);
+
 
 
         return trainingDto;
