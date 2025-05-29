@@ -13,7 +13,7 @@ import java.util.List;
 public class TrainingDateController {
     private final TrainingDateService trainingDateService;
 
-    @GetMapping("/")
+    @GetMapping("/training-dates")
     public List<TrainingDateDto> getAllTrainingDates() {
         return trainingDateService.getAllTrainingDates();
     }

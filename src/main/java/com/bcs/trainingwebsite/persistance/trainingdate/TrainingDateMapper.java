@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TrainingDateMapper {
 
-    @Mapping(source = "date", target = "trainingDate")
+    @Mapping(source = "date", target = "trainingDate", qualifiedByName = "localDateToString")
     @Mapping(source = "training.id", target = "trainingId")
     TrainingDateDto toTrainingDateDto(TrainingDate trainingDate);
 

@@ -4,11 +4,13 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDateDto;
 import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDate;
 import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDateMapper;
 import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDateRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+
 public class TrainingDateService {
 
     private final TrainingDateRepository trainingDateRepository;

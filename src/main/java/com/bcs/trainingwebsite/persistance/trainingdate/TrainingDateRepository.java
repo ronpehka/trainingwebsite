@@ -26,7 +26,6 @@ public interface TrainingDateRepository extends JpaRepository<TrainingDate, Inte
     @Query("delete from TrainingDate t where t.training.id = :trainingId")
     void deleteByTrainingId(Integer trainingId);
 
-    @Query("select t from TrainingDate t where t.date = :date")
     List<TrainingDate> findAll();
 
 }
