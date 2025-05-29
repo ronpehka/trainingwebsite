@@ -235,10 +235,10 @@ public class TrainingInfoService {
         return trainingInfos;
     }
 
-    public TrainingDto getTrainingInfo(Integer trainingId, Integer coachId) {
-        Training training = trainingRepository.findTrainingBy(trainingId, coachId).orElseThrow(() -> new ForeignKeyNotFoundException("coachId", coachId));
+    public TrainingDto getTrainingInfo(Integer trainingId) {
+        Training training = trainingRepository.getReferenceById(trainingId);
         TrainingDto trainingDto = trainingMapper.toTrainingDto(training);
-        trainingDto.setCoachUserId(coachId);
+
         List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(trainingId);
         List<TrainingWeekdayInfo> trainingWeekdayInfos = trainingWeekdayMapper.toTrainingWeekdayInfos(trainingWeekdays);
         trainingDto.setTrainingDays(trainingWeekdayInfos);

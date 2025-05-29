@@ -34,6 +34,7 @@ public interface TrainingMapper {
 
     List<TrainingInfo> toTrainingInfos(List<Training> trainings);
 
+
     @Mapping(source = "trainingName", target = "name")
     @Mapping(source = "trainingDescription", target = "description")
     @Mapping(source = "trainingGender", target = "gender")
@@ -46,6 +47,7 @@ public interface TrainingMapper {
     Training toTraining(TrainingDto trainingDto);
 
 
+    @Mapping(source="coachUser.id", target = "coachUserId")
     @Mapping(source="name",target="trainingName")
     @Mapping(source="description",target="trainingDescription")
     @Mapping(source = "sport.id", target = "sportId")
