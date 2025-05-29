@@ -67,30 +67,6 @@ public class TrainingInfoService {
         return trainingInfos;
     }
 
-    @Transactional
-    public Integer addNewTraining(TrainingDto trainingDto) {
-        User userCoach = getUserCoach(trainingDto);
-
-        Sport sport = getSport(trainingDto);
-
-        Training training = trainingMapper.toTraining(trainingDto);
-        training.setCoachUser(userCoach);
-        training.setSport(sport);
-        trainingRepository.save(training);
-
-        // Determine valid training dates
-        List<Integer> availableWeekdays = getAvailableWeekdays(trainingDto.getTrainingDays());
-        List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
-
-        // Check for overlapping training sessions
-        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
-        trainingDateRepository.saveAll(trainingDates);
-
-        List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
-        trainingWeekdayRepository.saveAll(trainingWeekdays);
-        return training.getId();
-    }
-
     private List<TrainingWeekday> getTrainingWeekdays(TrainingDto trainingDto, Training training) {
         return trainingDto.getTrainingDays().stream()
                 .filter(TrainingWeekdayInfo::isAvailable)
