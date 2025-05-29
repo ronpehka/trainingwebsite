@@ -19,9 +19,7 @@ public interface TrainingLocationRepository extends JpaRepository<TrainingLocati
 
     @Transactional
     @Modifying
-    @Query("update TrainingLocation t set t.training = :training, t.location = :location, t.status = :status")
-    void updateTrainingLocation(@Param("training") Training training,
-                                              Location location,String status);
-
+    @Query("delete from TrainingLocation t where t.location.id = :locationId")
+    void deleteBy(Integer locationId);
 
 }

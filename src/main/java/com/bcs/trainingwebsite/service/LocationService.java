@@ -73,8 +73,8 @@ public class LocationService {
 
 
     public void removeLocation(Integer locationId) {
-        Location location = locationRepository.findById(locationId)
-                .orElseThrow(() -> new PrimaryKeyNotFoundException("locationId", locationId));
+        trainingLocationRepository.deleteBy(locationId);
+        locationRepository.deleteById(locationId);
 
     }
 }
