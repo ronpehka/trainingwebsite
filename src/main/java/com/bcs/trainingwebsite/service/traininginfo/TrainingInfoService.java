@@ -9,6 +9,7 @@ import com.bcs.trainingwebsite.infrastructure.error.Error;
 import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.exception.PrimaryKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.location.Location;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
@@ -136,7 +137,7 @@ public class TrainingInfoService {
 
     private Sport getSport(TrainingDto trainingDto) {
         return sportRepository.findById(trainingDto.getSportId())
-                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("sportId", trainingDto.getSportId()));
     }
 
     private User getUserCoach(TrainingDto trainingDto) {
@@ -192,7 +193,7 @@ public class TrainingInfoService {
     public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
-                .orElseThrow(() -> new DataNotFoundException(Error.INVALID_REQUEST.getMessage(), Error.INVALID_REQUEST.getErrorCode()));
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
         trainingMapper.partialUpdate(training, trainingDto);
         handleSportUpdate(trainingDto, training);
         trainingRepository.save(training);
@@ -203,7 +204,7 @@ public class TrainingInfoService {
         // Check for overlapping training sessions
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
         // Save valid training dates
-        trainingDateRepository.deleteByTrainingId(training.getId());
+        trainingDateRepository.deleteBy(training.getId());
         trainingDateRepository.saveAll(trainingDates);
         List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
         trainingWeekdayRepository.deleteBy(trainingId);
@@ -269,6 +270,16 @@ public class TrainingInfoService {
 
 
         return trainingDto;
+    }
+
+    public void removeTraining(Integer trainingId) {
+        Training training = trainingRepository.findTrainingBy(trainingId, Status.ACTIVE.getCode()).orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
+        trainingWeekdayRepository.deleteBy(trainingId);
+        trainingLocationRepository.deleteById(trainingId);
+        trainingDateRepository.deleteBy(trainingId);
+        training.setStatus(Status.DELETED.getCode());
+        trainingRepository.save(training);
+
     }
 }
 

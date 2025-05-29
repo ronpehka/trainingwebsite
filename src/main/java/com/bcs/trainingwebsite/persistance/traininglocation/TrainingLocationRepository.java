@@ -23,4 +23,5 @@ public interface TrainingLocationRepository extends JpaRepository<TrainingLocati
     void updateTrainingLocation(@Param("training") Training training,
                                               Location location,String status);
 
+
 }

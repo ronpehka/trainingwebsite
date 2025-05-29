@@ -50,5 +50,10 @@ public class TrainingInfoController {
         return trainingInfoService.getTrainingsBySportName(sportName);
     }
 
+    @DeleteMapping("/training-info")
+    public void removeTraining(@RequestParam Integer trainingId){
+        trainingInfoService.removeTraining(trainingId);
+    }
+
 
 }
