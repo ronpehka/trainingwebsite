@@ -23,6 +23,7 @@ public interface LocationMapper {
     @Mapping(source = "locationName", target = "name")
     @Mapping(source = "locationAddress", target = "address")
     @Mapping(source = "openingHours", target = "openingHours")
+    @Mapping(source = "imageUrl", target = "imageUrl")
     Location toLocation (LocationDto locationDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

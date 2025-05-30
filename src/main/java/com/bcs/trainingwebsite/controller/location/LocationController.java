@@ -32,7 +32,7 @@ public class LocationController {
         locationService.addNewLocation(locationDto);
     }
 
-    @DeleteMapping("/locations")
+    @DeleteMapping("/location")
     public void removeLocation(@RequestParam Integer locationId) {
         locationService.removeLocation(locationId);
     }
@@ -40,5 +40,9 @@ public class LocationController {
     @PutMapping("/location")
     public void updateLocation(@RequestParam Integer locationId, @RequestBody LocationDto locationDto) {
         locationService.updateLocation(locationId, locationDto);
+    }
+    @GetMapping("/loction")
+    public LocationInfo findLocationBy(@RequestParam Integer locationId){
+       return locationService.findLocationBy(locationId);
     }
 }

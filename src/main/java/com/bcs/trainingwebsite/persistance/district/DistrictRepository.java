@@ -11,4 +11,5 @@ public interface DistrictRepository extends JpaRepository<District, Integer> {
     @Query("select d from District d where d.name = :districtName")
     Optional<District> findByName(String districtName);
 
+
 }

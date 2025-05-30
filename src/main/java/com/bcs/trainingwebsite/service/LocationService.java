@@ -83,6 +83,13 @@ public class LocationService {
         locationMapper.partialUpdate(location, locationDto);
         locationRepository.save(location);
     }
+
+    public LocationInfo findLocationBy(Integer locationId) {
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("locationId", locationId));
+       return locationMapper.toLocationInfo(location);
+
+    }
 }
 
 
