@@ -1,6 +1,5 @@
 package com.bcs.trainingwebsite.controller.traininginfo.dto;
 
-import com.bcs.trainingwebsite.controller.sport.dto.SportInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -23,5 +22,6 @@ public class TrainingInfo {
     private String districtName; //""
     private String sportType;
     private Integer maxLimit;
+    private Integer emptyPlaces;
 
 }

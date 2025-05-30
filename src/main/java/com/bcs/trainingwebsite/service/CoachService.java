@@ -61,10 +61,18 @@ public class CoachService {
                 String imageData = ImageConverter.bytesToString(bytes);
                 coachInfo.setImageData(imageData);
             }
+
+
+
         }
+//        private void handleGetCoachImage () {
+//            Integer coachUserId = coachInfo.getCoachUserId();
+//            List<CoachImage> coachImages = coachImageRepository.getCoachImageById(coachUserId);
+//            coachImageMapper.toCoachInfos(coachImages);
+//        }
+
         return coachInfos;
     }
-
 
 }
 
