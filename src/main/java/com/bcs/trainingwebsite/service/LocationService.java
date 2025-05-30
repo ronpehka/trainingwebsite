@@ -11,15 +11,12 @@ import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
 import com.bcs.trainingwebsite.persistance.location.Location;
 import com.bcs.trainingwebsite.persistance.location.LocationMapper;
 import com.bcs.trainingwebsite.persistance.location.LocationRepository;
-import com.bcs.trainingwebsite.persistance.locationimage.LocationImage;
 import com.bcs.trainingwebsite.persistance.locationimage.LocationImageRepository;
 import com.bcs.trainingwebsite.persistance.traininglocation.TrainingLocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +80,7 @@ public class LocationService {
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("locationId", locationId));
         District district = districtRepository.findById(locationDto.getDistrictId()).orElseThrow(() -> new ForeignKeyNotFoundException("districtId", locationDto.getDistrictId()));
         location.setDistrict(district);
-        locationMapper.partialUpdate(location,locationDto);
+        locationMapper.partialUpdate(location, locationDto);
         locationRepository.save(location);
     }
 }

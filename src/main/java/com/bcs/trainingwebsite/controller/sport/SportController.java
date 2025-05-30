@@ -16,8 +16,8 @@ public class SportController {
     private final SportService sportService;
 
     @GetMapping("/sports")
-    public List<SportInfo> getAllSports(){
-       return sportService.getAllSports();
+    public List<SportInfo> getAllSports() {
+        return sportService.getAllSports();
     }
 
 }

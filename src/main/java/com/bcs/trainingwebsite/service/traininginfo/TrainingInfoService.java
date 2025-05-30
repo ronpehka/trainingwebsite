@@ -6,7 +6,6 @@ import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDto;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingInfo;
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
 import com.bcs.trainingwebsite.infrastructure.error.Error;
-import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.PrimaryKeyNotFoundException;
@@ -230,7 +229,7 @@ public class TrainingInfoService {
     }
 
     public List<TrainingInfo> getTrainingsBySportIdOrAll(Integer sportId) {
-        if (sportId != null && sportId !=0) {
+        if (sportId != null && sportId != 0) {
             return getTrainingsBySportId(sportId);
         } else {
             return getAllTrainingInfo();
@@ -243,6 +242,7 @@ public class TrainingInfoService {
         addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
     }
+
     private void addAvailablePlaces(TrainingInfo trainingInfo) {
         int takenPlaces = registerRepository.countActiveRegistrationsByTrainingId(trainingInfo.getTrainingId());
         trainingInfo.setEmptyPlaces(trainingInfo.getMaxLimit() - takenPlaces);
@@ -276,7 +276,6 @@ public class TrainingInfoService {
                 .collect(Collectors.toList());
 
         trainingDto.setTrainingDays(trainingWeekdayInfos);
-
 
 
         return trainingDto;

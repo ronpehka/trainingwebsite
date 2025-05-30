@@ -33,12 +33,12 @@ public class LocationController {
     }
 
     @DeleteMapping("/locations")
-    public void removeLocation(@RequestParam Integer locationId){
+    public void removeLocation(@RequestParam Integer locationId) {
         locationService.removeLocation(locationId);
     }
 
     @PutMapping("/location")
-    public void updateLocation(@RequestParam Integer locationId, @RequestBody LocationDto locationDto){
-        locationService.updateLocation(locationId,locationDto);
+    public void updateLocation(@RequestParam Integer locationId, @RequestBody LocationDto locationDto) {
+        locationService.updateLocation(locationId, locationDto);
     }
 }
