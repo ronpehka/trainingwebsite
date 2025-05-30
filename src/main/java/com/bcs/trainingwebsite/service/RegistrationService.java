@@ -48,10 +48,11 @@ public class RegistrationService {
         createAndSaveProfile(customerProfile, user);
     }
 
-    public void addNewCoach(CoachProfileDto coachProfileDto) {
+    public Integer addNewCoach(CoachProfileDto coachProfileDto) {
         validateEmailIsAvailable(coachProfileDto.getEmail());
         User user = createAndSaveUser(coachProfileDto);
         createAndSaveCoachProfile(coachProfileDto, user);
+        return user.getId();
     }
 
     public void addCoachSport(Integer userId, Integer sportId) {

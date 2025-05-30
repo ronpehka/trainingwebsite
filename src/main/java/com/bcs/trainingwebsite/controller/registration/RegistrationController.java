@@ -21,8 +21,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/coach-registration")
-    public void addNewCoach(@RequestBody CoachProfileDto coachProfileDto) {
-        registrationService.addNewCoach(coachProfileDto);
+    public Integer addNewCoach(@RequestBody CoachProfileDto coachProfileDto) {
+        return registrationService.addNewCoach(coachProfileDto);
     }
 
 }
