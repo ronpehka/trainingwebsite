@@ -252,15 +252,12 @@ public class TrainingInfoService {
         Training training = trainingRepository.findTrainingBy(trainingId, Status.ACTIVE.getCode()).orElseThrow(() -> new EntityNotFoundException("Training not found with id: " + trainingId));
         TrainingDto trainingDto = trainingMapper.toTrainingDto(training);
 
-        // Get all weekdays (assuming you have a method for this)
         List<Weekday> allWeekdays = weekdayRepository.findAll();
-
-        // Get weekdays assigned to this training
         List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(trainingId);
 
         // Convert assigned weekdays to a set for quick lookup
         Set<Integer> assignedWeekdayIds = trainingWeekdays.stream()
-                .map(tw -> tw.getWeekday().getId())  // adapt getter accordingly
+                .map(tw -> tw.getWeekday().getId())
                 .collect(Collectors.toSet());
 
         // Map all weekdays to TrainingWeekdayInfo, mark available true if assigned
