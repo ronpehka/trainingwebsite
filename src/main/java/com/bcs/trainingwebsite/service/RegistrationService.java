@@ -22,6 +22,8 @@ import com.bcs.trainingwebsite.persistance.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILABLE;
 
 @Service
@@ -55,14 +57,18 @@ public class RegistrationService {
         return user.getId();
     }
 
-    public void addCoachSport(Integer userId, Integer sportId) {
+    public void addCoachSports(Integer userId, List<Integer> sportIds) {
         User user = getValidUser(userId);
-        Sport sport = getValidSport(sportId);
-        CoachSport coachSport = createCoachSport(user, sport);
-        coachSportRepository.save(coachSport);
+        for (Integer sportId : sportIds) {
+            Sport sport = getValidSport(sportId);
+            CoachSport coachSport = createCoachSport(user, sport);
+            coachSportRepository.save(coachSport);
+        }
+
     }
 
     private static CoachSport createCoachSport(User user, Sport sport) {
+
         CoachSport coachSport = new CoachSport();
         coachSport.setCoachUser(user);
         coachSport.setSport(sport);
