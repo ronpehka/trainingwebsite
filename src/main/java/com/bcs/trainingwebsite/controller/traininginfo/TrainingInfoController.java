@@ -27,7 +27,7 @@ public class TrainingInfoController {
 
 
     @GetMapping("/training-info")
-    public List<TrainingInfo> getTrainingInfos(@RequestParam Integer sportId) {
+    public List<TrainingInfo> getTrainingInfos(@RequestParam(required = false) Integer sportId) {
             return trainingInfoService.getTrainingsBySportIdOrAll(sportId);
         }
 
