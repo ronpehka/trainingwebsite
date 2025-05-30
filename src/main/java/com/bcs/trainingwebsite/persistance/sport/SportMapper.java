@@ -20,4 +20,6 @@ public interface SportMapper {
     List<SportInfo> toSportInfos(List<Sport>sports);
 
 
+
+
 }

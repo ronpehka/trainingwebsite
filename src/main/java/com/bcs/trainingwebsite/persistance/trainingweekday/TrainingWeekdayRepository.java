@@ -20,8 +20,8 @@ public interface TrainingWeekdayRepository extends JpaRepository<TrainingWeekday
 
     @Transactional
     @Modifying
-    @Query("update TrainingWeekday t set t.training = :training, t.weekday.id = :weekdayId")
-    void updateTrainingWeekDays(Training training, Integer weekdayId);
+    @Query("delete from TrainingWeekday t where t.training.id = :trainingId")
+    void deleteBy(Integer trainingId);
 
 
 }

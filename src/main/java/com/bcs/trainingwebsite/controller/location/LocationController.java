@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,4 +32,8 @@ public class LocationController {
         locationService.addNewLocation(locationDto);
     }
 
+    @DeleteMapping("/locations")
+    public void removeLocation(@RequestParam Integer locationId){
+        locationService.removeLocation(locationId);
+    }
 }

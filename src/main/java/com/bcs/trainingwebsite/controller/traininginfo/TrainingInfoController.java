@@ -20,6 +20,11 @@ public class TrainingInfoController {
        return trainingInfoService.addNewTraining(trainingDto);
     }
 
+    @GetMapping("/training")
+    public TrainingDto getTrainingInfo(@RequestParam Integer trainingId){
+       return trainingInfoService.getTrainingInfo(trainingId);
+    }
+
 
     @GetMapping("/training-info")
     public List<TrainingInfo> getTrainingInfos(@RequestParam Integer sportId) {
@@ -34,6 +39,11 @@ public class TrainingInfoController {
     @GetMapping("/training-info/by-sport")
     public List<TrainingInfo> getTrainingsBySportName(@RequestParam String sportName) {
         return trainingInfoService.getTrainingsBySportName(sportName);
+    }
+
+    @DeleteMapping("/training-info")
+    public void removeTraining(@RequestParam Integer trainingId){
+        trainingInfoService.removeTraining(trainingId);
     }
 
 

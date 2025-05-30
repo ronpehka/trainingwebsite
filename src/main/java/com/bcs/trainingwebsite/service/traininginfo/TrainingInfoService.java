@@ -9,6 +9,7 @@ import com.bcs.trainingwebsite.infrastructure.error.Error;
 import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
+import com.bcs.trainingwebsite.infrastructure.exception.PrimaryKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.location.Location;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
@@ -26,7 +27,10 @@ import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayMapper
 import com.bcs.trainingwebsite.persistance.trainingweekday.TrainingWeekdayRepository;
 import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
+import com.bcs.trainingwebsite.persistance.weekday.Weekday;
+import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
 import com.bcs.trainingwebsite.util.TimeConverter;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +40,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +57,7 @@ public class TrainingInfoService {
     private final TrainingDateRepository trainingDateRepository;
     private final SportRepository sportRepository;
     private final UserRepository userRepository;
+    private final WeekdayRepository weekdayRepository;
     private final RegisterRepository registerRepository;
 
     public List<TrainingInfo> getAllTrainingInfo() {
@@ -60,6 +66,21 @@ public class TrainingInfoService {
         addRemainingInformationToTrainingInfos(trainingInfos);
         return trainingInfos;
     }
+
+    private List<TrainingWeekday> getTrainingWeekdays(TrainingDto trainingDto, Training training) {
+        return trainingDto.getTrainingDays().stream()
+                .filter(TrainingWeekdayInfo::isAvailable)
+                .map(weekDayInfo -> {
+                    Weekday weekday = weekdayRepository.findById(weekDayInfo.getWeekdayId())
+                            .orElseThrow(() -> new ForeignKeyNotFoundException("weekdayId", weekDayInfo.getWeekdayId()));
+                    TrainingWeekday trainingWeekday = new TrainingWeekday();
+                    trainingWeekday.setTraining(training);
+                    trainingWeekday.setWeekday(weekday);
+                    return trainingWeekday;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     private void addRemainingInformationToTrainingInfos(List<TrainingInfo> trainingInfos) {
         for (TrainingInfo trainingInfo : trainingInfos) {
@@ -117,7 +138,7 @@ public class TrainingInfoService {
 
     private Sport getSport(TrainingDto trainingDto) {
         return sportRepository.findById(trainingDto.getSportId())
-                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", trainingDto.getSportId()));
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("sportId", trainingDto.getSportId()));
     }
 
     private User getUserCoach(TrainingDto trainingDto) {
@@ -153,6 +174,7 @@ public class TrainingInfoService {
         LocalTime newStart = TimeConverter.stringToLocalTime(trainingDto.getStartTime());
         LocalTime newEnd = TimeConverter.stringToLocalTime(trainingDto.getEndTime());
 
+
         for (TrainingDate newDate : newTrainingDates) {
             Optional<TrainingDate> existing = trainingDateRepository.findTrainingDateBy(userCoach, newDate.getDate());
             if (existing.isPresent()) {
@@ -168,12 +190,12 @@ public class TrainingInfoService {
         }
     }
 
-
+    @Transactional
     public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
-                .orElseThrow(() -> new DataNotFoundException(Error.INVALID_REQUEST.getMessage(), Error.INVALID_REQUEST.getErrorCode()));
-        trainingMapper.partialUpdate(training,trainingDto);
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
+        trainingMapper.partialUpdate(training, trainingDto);
         handleSportUpdate(trainingDto, training);
         trainingRepository.save(training);
         // Determine valid training dates
@@ -184,15 +206,19 @@ public class TrainingInfoService {
         validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
 
         // Save valid training dates
-        trainingDateRepository.deleteByTrainingId(training.getId());
+        trainingDateRepository.deleteBy(training.getId());
         trainingDateRepository.saveAll(trainingDates);
+        List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
+        trainingWeekdayRepository.deleteBy(trainingId);
+        trainingWeekdayRepository.saveAll(trainingWeekdays);
+
 
     }
 
     private void handleSportUpdate(TrainingDto trainingDto, Training training) {
         Integer trainingDtoSportId = trainingDto.getSportId();
         Integer trainingSportId = training.getSport().getId();
-        if(!trainingDtoSportId.equals(trainingSportId)){
+        if (!trainingDtoSportId.equals(trainingSportId)) {
             Sport sport = getSport(trainingDto);
             training.setSport(sport);
         }
@@ -200,7 +226,7 @@ public class TrainingInfoService {
 
     public List<TrainingInfo> getTrainingsBySportName(String sportName) {
         List<Training> trainings = trainingRepository.findTrainingsByName(sportName);
-        return  trainingMapper.toTrainingInfos(trainings);
+        return trainingMapper.toTrainingInfos(trainings);
     }
 
     public List<TrainingInfo> getTrainingsBySportIdOrAll(Integer sportId) {
@@ -222,6 +248,49 @@ public class TrainingInfoService {
         trainingInfo.setEmptyPlaces(trainingInfo.getMaxLimit() - takenPlaces);
     }
 
+    public TrainingDto getTrainingInfo(Integer trainingId) {
+        Training training = trainingRepository.findTrainingBy(trainingId, Status.ACTIVE.getCode()).orElseThrow(() -> new EntityNotFoundException("Training not found with id: " + trainingId));
+        TrainingDto trainingDto = trainingMapper.toTrainingDto(training);
+
+        // Get all weekdays (assuming you have a method for this)
+        List<Weekday> allWeekdays = weekdayRepository.findAll();
+
+        // Get weekdays assigned to this training
+        List<TrainingWeekday> trainingWeekdays = trainingWeekdayRepository.findTrainingWeekdaysBy(trainingId);
+
+        // Convert assigned weekdays to a set for quick lookup
+        Set<Integer> assignedWeekdayIds = trainingWeekdays.stream()
+                .map(tw -> tw.getWeekday().getId())  // adapt getter accordingly
+                .collect(Collectors.toSet());
+
+        // Map all weekdays to TrainingWeekdayInfo, mark available true if assigned
+        List<TrainingWeekdayInfo> trainingWeekdayInfos = allWeekdays.stream()
+                .map(weekday -> {
+                    TrainingWeekdayInfo info = new TrainingWeekdayInfo();
+                    info.setWeekdayId(weekday.getId());
+                    info.setWeekdayName(weekday.getShortField());
+                    info.setWeekdayNumber(weekday.getNumber());
+                    info.setAvailable(assignedWeekdayIds.contains(weekday.getId()));
+                    return info;
+                })
+                .collect(Collectors.toList());
+
+        trainingDto.setTrainingDays(trainingWeekdayInfos);
+
+
+
+        return trainingDto;
+    }
+
+    public void removeTraining(Integer trainingId) {
+        Training training = trainingRepository.findTrainingBy(trainingId, Status.ACTIVE.getCode()).orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
+        trainingWeekdayRepository.deleteBy(trainingId);
+        trainingLocationRepository.deleteById(trainingId);
+        trainingDateRepository.deleteBy(trainingId);
+        training.setStatus(Status.DELETED.getCode());
+        trainingRepository.save(training);
+
+    }
 }
 
 
