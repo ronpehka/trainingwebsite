@@ -77,6 +77,15 @@ public class LocationService {
         locationRepository.deleteById(locationId);
 
     }
+
+    public void updateLocation(Integer locationId, LocationDto locationDto) {
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("locationId", locationId));
+        District district = districtRepository.findById(locationDto.getDistrictId()).orElseThrow(() -> new ForeignKeyNotFoundException("districtId", locationDto.getDistrictId()));
+        location.setDistrict(district);
+        locationMapper.partialUpdate(location,locationDto);
+        locationRepository.save(location);
+    }
 }
 
 

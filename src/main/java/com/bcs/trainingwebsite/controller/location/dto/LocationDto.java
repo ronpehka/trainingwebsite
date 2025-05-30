@@ -10,4 +10,6 @@ public class LocationDto {
     private String locationName;
     private String locationAddress;
     private String openingHours;
+    private String imageUrl;
+
 }

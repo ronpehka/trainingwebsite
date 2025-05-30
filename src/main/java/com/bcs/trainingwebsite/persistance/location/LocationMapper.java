@@ -2,8 +2,7 @@ package com.bcs.trainingwebsite.persistance.location;
 
 import com.bcs.trainingwebsite.controller.location.dto.LocationDto;
 import com.bcs.trainingwebsite.controller.location.dto.LocationInfo;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 @Mapper()
@@ -20,9 +19,17 @@ public interface LocationMapper {
     List<LocationInfo> toLocationInfos(List<Location> locations);
 
 
+
     @Mapping(source = "locationName", target = "name")
     @Mapping(source = "locationAddress", target = "address")
     @Mapping(source = "openingHours", target = "openingHours")
     Location toLocation (LocationDto locationDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source="locationName", target="name")
+    @Mapping(source="locationAddress", target="address")
+    @Mapping(source="openingHours", target="openingHours")
+    @Mapping(source="imageUrl", target="imageUrl")
+    Location partialUpdate(@MappingTarget Location location, LocationDto locationDto);
 
 }

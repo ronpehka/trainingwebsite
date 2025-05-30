@@ -36,4 +36,9 @@ public class LocationController {
     public void removeLocation(@RequestParam Integer locationId){
         locationService.removeLocation(locationId);
     }
+
+    @PutMapping("/location")
+    public void updateLocation(@RequestParam Integer locationId, @RequestBody LocationDto locationDto){
+        locationService.updateLocation(locationId,locationDto);
+    }
 }
