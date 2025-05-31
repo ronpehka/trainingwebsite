@@ -27,7 +27,7 @@ public class LocationController {
         return locationInfos;
     }
 
-    @PostMapping("/new-location")
+    @PostMapping("/location")
     public void addNewLocation(@RequestBody LocationDto locationDto) {
         locationService.addNewLocation(locationDto);
     }
@@ -41,7 +41,7 @@ public class LocationController {
     public void updateLocation(@RequestParam Integer locationId, @RequestBody LocationDto locationDto) {
         locationService.updateLocation(locationId, locationDto);
     }
-    @GetMapping("/loction")
+    @GetMapping("/location")
     public LocationInfo findLocationBy(@RequestParam Integer locationId){
        return locationService.findLocationBy(locationId);
     }

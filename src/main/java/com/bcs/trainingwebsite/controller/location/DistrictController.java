@@ -21,7 +21,7 @@ public class DistrictController {
         districtService.addNewDistrict(districtDto);
     }
 
-    @GetMapping("district")
+    @GetMapping("/districts")
     public List<DistrictInfo> getAllDistricts(){
        return districtService.getAllDistricts();
     }
