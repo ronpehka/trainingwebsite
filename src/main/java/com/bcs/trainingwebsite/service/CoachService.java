@@ -9,7 +9,6 @@ import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
 import com.bcs.trainingwebsite.persistance.coachsport.CoachSport;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSportMapper;
 import com.bcs.trainingwebsite.persistance.coachsport.CoachSportRepository;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileMapper;
@@ -36,7 +35,6 @@ public class CoachService {
     private final CoachSportRepository coachSportRepository;
     private final TrainingRepository trainingRepository;
     private final CoachImageRepository coachImageRepository;
-    private final CoachSportMapper coachSportMapper;
     private final SportRepository sportRepository;
     private final SportMapper sportMapper;
     private final CoachImageMapper coachImageMapper;
@@ -63,6 +61,7 @@ public class CoachService {
                 String imageData = ImageConverter.bytesToString(bytes);
                 coachInfo.setImageData(imageData);
             }
+
 
 
         }

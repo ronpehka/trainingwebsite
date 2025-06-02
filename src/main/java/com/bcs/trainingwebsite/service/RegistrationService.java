@@ -3,23 +3,26 @@ package com.bcs.trainingwebsite.service;
 import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
+import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
 import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
+import com.bcs.trainingwebsite.persistance.coachsport.CoachSport;
+import com.bcs.trainingwebsite.persistance.coachsport.CoachSportRepository;
 import com.bcs.trainingwebsite.persistance.profile.Profile;
 import com.bcs.trainingwebsite.persistance.profile.ProfileMapper;
 import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
 import com.bcs.trainingwebsite.persistance.role.Role;
 import com.bcs.trainingwebsite.persistance.role.RoleRepository;
+import com.bcs.trainingwebsite.persistance.sport.Sport;
+import com.bcs.trainingwebsite.persistance.sport.SportRepository;
 import com.bcs.trainingwebsite.persistance.user.User;
 import com.bcs.trainingwebsite.persistance.user.UserMapper;
 import com.bcs.trainingwebsite.persistance.user.UserRepository;
-import com.bcs.trainingwebsite.util.ImageConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Optional;
+import java.util.List;
 
 import static com.bcs.trainingwebsite.infrastructure.error.Error.EMAIL_UNAVAILABLE;
 
@@ -37,6 +40,8 @@ public class RegistrationService {
     private static final int COACH = 2;
     private final CoachImageRepository coachImageRepository;
     private final CoachImageMapper coachImageMapper;
+    private final CoachSportRepository coachSportRepository;
+    private final SportRepository sportRepository;
 
 
     public void addNewCustomer(CustomerProfile customerProfile) {
@@ -45,10 +50,41 @@ public class RegistrationService {
         createAndSaveProfile(customerProfile, user);
     }
 
-    public void addNewCoach(CoachProfileDto coachProfileDto) {
+    public Integer addNewCoach(CoachProfileDto coachProfileDto) {
         validateEmailIsAvailable(coachProfileDto.getEmail());
         User user = createAndSaveUser(coachProfileDto);
         createAndSaveCoachProfile(coachProfileDto, user);
+        return user.getId();
+    }
+
+    public void addCoachSports(Integer userId, List<Integer> sportIds) {
+        User user = getValidUser(userId);
+        for (Integer sportId : sportIds) {
+            Sport sport = getValidSport(sportId);
+            CoachSport coachSport = createCoachSport(user, sport);
+            coachSportRepository.save(coachSport);
+        }
+
+    }
+
+    private static CoachSport createCoachSport(User user, Sport sport) {
+
+        CoachSport coachSport = new CoachSport();
+        coachSport.setCoachUser(user);
+        coachSport.setSport(sport);
+        return coachSport;
+    }
+
+    private Sport getValidSport(Integer sportId) {
+        Sport sport = sportRepository.findById(sportId)
+                .orElseThrow(() -> new ForeignKeyNotFoundException("sportId", sportId));
+        return sport;
+    }
+
+    private User getValidUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ForeignKeyNotFoundException("userId", userId));
+        return user;
     }
 
     private void createAndSaveProfile(CustomerProfile customerProfile, User user) {
@@ -88,15 +124,16 @@ public class RegistrationService {
     }
 
 
-    private void handleAddCoachImageData(User user,CoachProfileDto coachProfileDto) {
+    private void handleAddCoachImageData(User user, CoachProfileDto coachProfileDto) {
 
         CoachImage coachImage = coachImageMapper.toCoachImage(coachProfileDto);
         coachImage.setUser(user);
         coachImageRepository.save(coachImage);
 
 
-
     }
+
+
 
 
 

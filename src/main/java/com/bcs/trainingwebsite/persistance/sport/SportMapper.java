@@ -15,6 +15,7 @@ public interface SportMapper {
 
     @Mapping(source = "id", target = "sportId")
     @Mapping(source = "name", target = "sportName")
+    @Mapping(constant = "false", target = "available")
     SportInfo toSportInfo(Sport sport);
 
     List<SportInfo> toSportInfos(List<Sport>sports);

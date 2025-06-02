@@ -6,4 +6,5 @@ import lombok.Data;
 public class SportInfo {
     private Integer sportId;
     private String sportName;
+    private boolean isAvailable;
 }
