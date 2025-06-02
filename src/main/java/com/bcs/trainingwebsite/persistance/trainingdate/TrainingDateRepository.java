@@ -13,9 +13,18 @@ import java.util.Optional;
 
 public interface TrainingDateRepository extends JpaRepository<TrainingDate, Integer> {
 
-    @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date")
-    Optional<TrainingDate> findTrainingDateBy(User user, LocalDate date);
+//    @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date")
+//    Optional<TrainingDate> findTrainingDateBy(User user, LocalDate date);
+//    @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date and t.training.id <> :trainingId")
+//    Optional<TrainingDate> findTrainingDate(User user, LocalDate date, Integer trainingId);
 
+
+    @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date")
+    List<TrainingDate> findTrainingDatesByCoachAndDate(User user, LocalDate date);
+
+
+    @Query("select t from TrainingDate t where t.training.coachUser = :user and t.date = :date and t.training.id <> :trainingId")
+    List<TrainingDate> findTrainingDatesByCoachAndDateExcludingTraining(User user, LocalDate date, Integer trainingId);
     @Transactional
     @Modifying
     @Query("delete from TrainingDate t where t.training.id = :trainingId")

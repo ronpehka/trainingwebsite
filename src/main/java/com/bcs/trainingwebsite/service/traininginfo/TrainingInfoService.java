@@ -129,7 +129,7 @@ public class TrainingInfoService {
         List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
 
         // Check for overlapping training sessions
-        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto,null);
 
         trainingDateRepository.saveAll(trainingDates);
         return training.getId();
@@ -169,28 +169,42 @@ public class TrainingInfoService {
         return trainingDates;
     }
 
-    private void validateTrainingTimeConflicts(List<TrainingDate> newTrainingDates, User userCoach, TrainingDto trainingDto) {
+    private void validateTrainingTimeConflicts(
+            List<TrainingDate> newTrainingDates,
+            User userCoach,
+            TrainingDto trainingDto,
+            Integer trainingIdToExclude
+    ) {
         LocalTime newStart = TimeConverter.stringToLocalTime(trainingDto.getStartTime());
         LocalTime newEnd = TimeConverter.stringToLocalTime(trainingDto.getEndTime());
 
-
         for (TrainingDate newDate : newTrainingDates) {
-            Optional<TrainingDate> existing = trainingDateRepository.findTrainingDateBy(userCoach, newDate.getDate());
-            if (existing.isPresent()) {
-                Training existingTraining = existing.get().getTraining();
+            List<TrainingDate> existingDates;
+
+            if (trainingIdToExclude != null) {
+                existingDates = trainingDateRepository.findTrainingDatesByCoachAndDateExcludingTraining(userCoach, newDate.getDate(), trainingIdToExclude);
+            } else {
+                existingDates = trainingDateRepository.findTrainingDatesByCoachAndDate(userCoach, newDate.getDate());
+            }
+
+            for (TrainingDate existing : existingDates) {
+                Training existingTraining = existing.getTraining();
                 LocalTime existingStart = existingTraining.getStartTime();
                 LocalTime existingEnd = existingTraining.getEndTime();
 
                 boolean isOverlapping = newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
                 if (isOverlapping) {
-                    throw new ForbiddenException(Error.INCORRECT_TRAINING_TIME.getMessage(), Error.INCORRECT_TRAINING_TIME.getErrorCode());
+                    throw new ForbiddenException(
+                            Error.INCORRECT_TRAINING_TIME.getMessage(),
+                            Error.INCORRECT_TRAINING_TIME.getErrorCode()
+                    );
                 }
             }
         }
     }
 
     @Transactional
-    public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
+    public Integer updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
@@ -202,7 +216,7 @@ public class TrainingInfoService {
         List<TrainingDate> trainingDates = generateTrainingDates(trainingDto.getStartDate(), trainingDto.getEndDate(), availableWeekdays, training);
 
         // Check for overlapping training sessions
-        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto);
+        validateTrainingTimeConflicts(trainingDates, userCoach, trainingDto,trainingId);
 
         // Save valid training dates
         trainingDateRepository.deleteBy(training.getId());
@@ -210,6 +224,7 @@ public class TrainingInfoService {
         List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
         trainingWeekdayRepository.deleteBy(trainingId);
         trainingWeekdayRepository.saveAll(trainingWeekdays);
+        return trainingId;
 
 
     }
