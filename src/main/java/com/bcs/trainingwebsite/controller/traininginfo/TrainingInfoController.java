@@ -32,8 +32,8 @@ public class TrainingInfoController {
         }
 
     @PutMapping("/training-info")
-    public Integer updateTrainingInfo(@RequestParam Integer trainingId, @RequestBody TrainingDto trainingDto) {
-        return trainingInfoService.updateTrainingInfo(trainingId, trainingDto);
+    public void updateTrainingInfo(@RequestParam Integer trainingId, @RequestBody TrainingDto trainingDto) {
+       trainingInfoService.updateTrainingInfo(trainingId, trainingDto);
     }
 
     @GetMapping("/training-info/by-sport")

@@ -27,6 +27,7 @@ public interface ProfileMapper {
     @Mapping(expression = "java(profile.getFullName())", target = "coachFullName")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "phone", target = "phoneNumber")
+    @Mapping(source = "description", target = "description")
     @Mapping(constant = "", target = "imageData")
     CoachInfo toCoachInfo(Profile profile);
 

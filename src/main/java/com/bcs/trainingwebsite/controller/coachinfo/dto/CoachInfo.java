@@ -11,5 +11,6 @@ public class CoachInfo {
     private String email;
     private String phoneNumber;
     private List<CoachSportInfo> sports;
+    private String description;
     private String imageData;
 }

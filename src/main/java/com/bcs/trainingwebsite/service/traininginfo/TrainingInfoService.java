@@ -204,7 +204,7 @@ public class TrainingInfoService {
     }
 
     @Transactional
-    public Integer updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
+    public void updateTrainingInfo(Integer trainingId, TrainingDto trainingDto) {
         User userCoach = getUserCoach(trainingDto);
         Training training = trainingRepository.findById(trainingId)
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("trainingId", trainingId));
@@ -224,7 +224,6 @@ public class TrainingInfoService {
         List<TrainingWeekday> trainingWeekdays = getTrainingWeekdays(trainingDto, training);
         trainingWeekdayRepository.deleteBy(trainingId);
         trainingWeekdayRepository.saveAll(trainingWeekdays);
-        return trainingId;
 
 
     }
