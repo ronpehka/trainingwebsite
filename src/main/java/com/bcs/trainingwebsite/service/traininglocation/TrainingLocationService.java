@@ -2,12 +2,12 @@ package com.bcs.trainingwebsite.service.traininglocation;
 
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
-import com.bcs.trainingwebsite.persistance.location.Location;
-import com.bcs.trainingwebsite.persistance.location.LocationRepository;
-import com.bcs.trainingwebsite.persistance.training.Training;
-import com.bcs.trainingwebsite.persistance.training.TrainingRepository;
-import com.bcs.trainingwebsite.persistance.traininglocation.TrainingLocation;
-import com.bcs.trainingwebsite.persistance.traininglocation.TrainingLocationRepository;
+import com.bcs.trainingwebsite.persistence.location.Location;
+import com.bcs.trainingwebsite.persistence.location.LocationRepository;
+import com.bcs.trainingwebsite.persistence.training.Training;
+import com.bcs.trainingwebsite.persistence.training.TrainingRepository;
+import com.bcs.trainingwebsite.persistence.traininglocation.TrainingLocation;
+import com.bcs.trainingwebsite.persistence.traininglocation.TrainingLocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

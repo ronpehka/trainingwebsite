@@ -2,7 +2,7 @@ package com.bcs.trainingwebsite.controller.sport;
 
 
 import com.bcs.trainingwebsite.controller.sport.dto.SportInfo;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSportRepository;
+import com.bcs.trainingwebsite.persistence.coachsport.CoachSportRepository;
 import com.bcs.trainingwebsite.service.sport.SportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

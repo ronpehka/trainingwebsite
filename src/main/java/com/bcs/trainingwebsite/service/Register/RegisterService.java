@@ -3,12 +3,12 @@ package com.bcs.trainingwebsite.service.Register;
 import com.bcs.trainingwebsite.Status;
 import com.bcs.trainingwebsite.infrastructure.exception.DataNotFoundException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
-import com.bcs.trainingwebsite.persistance.register.Register;
-import com.bcs.trainingwebsite.persistance.register.RegisterRepository;
-import com.bcs.trainingwebsite.persistance.training.Training;
-import com.bcs.trainingwebsite.persistance.training.TrainingRepository;
-import com.bcs.trainingwebsite.persistance.user.User;
-import com.bcs.trainingwebsite.persistance.user.UserRepository;
+import com.bcs.trainingwebsite.persistence.register.Register;
+import com.bcs.trainingwebsite.persistence.register.RegisterRepository;
+import com.bcs.trainingwebsite.persistence.training.Training;
+import com.bcs.trainingwebsite.persistence.training.TrainingRepository;
+import com.bcs.trainingwebsite.persistence.user.User;
+import com.bcs.trainingwebsite.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,9 +3,9 @@ package com.bcs.trainingwebsite.service.district;
 
 import com.bcs.trainingwebsite.controller.location.dto.DistrictDto;
 import com.bcs.trainingwebsite.controller.location.dto.DistrictInfo;
-import com.bcs.trainingwebsite.persistance.district.District;
-import com.bcs.trainingwebsite.persistance.district.DistrictMapper;
-import com.bcs.trainingwebsite.persistance.district.DistrictRepository;
+import com.bcs.trainingwebsite.persistence.district.District;
+import com.bcs.trainingwebsite.persistence.district.DistrictMapper;
+import com.bcs.trainingwebsite.persistence.district.DistrictRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

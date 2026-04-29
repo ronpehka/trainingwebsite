@@ -1,9 +1,9 @@
 package com.bcs.trainingwebsite.service.sport;
 
 import com.bcs.trainingwebsite.controller.sport.dto.SportInfo;
-import com.bcs.trainingwebsite.persistance.sport.Sport;
-import com.bcs.trainingwebsite.persistance.sport.SportMapper;
-import com.bcs.trainingwebsite.persistance.sport.SportRepository;
+import com.bcs.trainingwebsite.persistence.sport.Sport;
+import com.bcs.trainingwebsite.persistence.sport.SportMapper;
+import com.bcs.trainingwebsite.persistence.sport.SportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

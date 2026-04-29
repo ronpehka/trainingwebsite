@@ -2,9 +2,9 @@ package com.bcs.trainingwebsite.service.weekday;
 
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingWeekdayInfo;
 import com.bcs.trainingwebsite.controller.weekdays.dto.WeekDayInfo;
-import com.bcs.trainingwebsite.persistance.weekday.Weekday;
-import com.bcs.trainingwebsite.persistance.weekday.WeekdayMapper;
-import com.bcs.trainingwebsite.persistance.weekday.WeekdayRepository;
+import com.bcs.trainingwebsite.persistence.weekday.Weekday;
+import com.bcs.trainingwebsite.persistence.weekday.WeekdayMapper;
+import com.bcs.trainingwebsite.persistence.weekday.WeekdayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

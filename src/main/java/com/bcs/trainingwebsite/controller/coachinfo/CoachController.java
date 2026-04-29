@@ -2,7 +2,7 @@ package com.bcs.trainingwebsite.controller.coachinfo;
 
 import com.bcs.trainingwebsite.controller.coachinfo.dto.CoachInfo;
 import com.bcs.trainingwebsite.controller.sport.dto.CoachSportDto;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSportRepository;
+import com.bcs.trainingwebsite.persistence.coachsport.CoachSportRepository;
 import com.bcs.trainingwebsite.service.CoachService;
 import com.bcs.trainingwebsite.service.RegistrationService;
 import com.bcs.trainingwebsite.service.sport.SportService;

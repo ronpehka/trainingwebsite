@@ -14,11 +14,11 @@ INSERT INTO training.sport (id, name) VALUES (default, 'korvpall');
 INSERT INTO training.sport (id, name) VALUES (default, 'jalgpall');
 INSERT INTO training.sport (id, name) VALUES (default, 'pesapall');
 
-INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 1, 'admin@admin.ee', '123', 'A');
-INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach@coach.ee', '123', 'A');
-INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach2@coach.ee', '123', 'A');
-INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client@client.ee', '123', 'A');
-INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client2@client.ee', '123', 'D');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 1, 'admin@admin.ee', '$2b$10$CXjCgXMjUemRrgpZNyz//uYkLw6v2tN/kqOh8RqahhhwlSW3J1yce', 'A');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach@coach.ee', '$2b$10$CXjCgXMjUemRrgpZNyz//uYkLw6v2tN/kqOh8RqahhhwlSW3J1yce', 'A');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 2, 'coach2@coach.ee', '$2b$10$CXjCgXMjUemRrgpZNyz//uYkLw6v2tN/kqOh8RqahhhwlSW3J1yce', 'A');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client@client.ee', '$2b$10$CXjCgXMjUemRrgpZNyz//uYkLw6v2tN/kqOh8RqahhhwlSW3J1yce', 'A');
+INSERT INTO training."user" (id, role_id, email, password, status) VALUES (default, 3, 'client2@client.ee', '$2b$10$CXjCgXMjUemRrgpZNyz//uYkLw6v2tN/kqOh8RqahhhwlSW3J1yce', 'D');
 
 INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender) VALUES (default, 4, 'Jaan', 'Uss', null, 'client@client.ee', '44444433', '1998-11-20', 'M');
 INSERT INTO training.profile (id, user_id, first_name, last_name, description, email, phone, date_of_birth, gender) VALUES (default, 2, 'Nipi', 'Tiri', 'Ma olen ülikõva treener', 'coach@coach.ee', '112', '1993-06-20', 'N');

@@ -1,9 +1,9 @@
 package com.bcs.trainingwebsite.service.trainingdate;
 
 import com.bcs.trainingwebsite.controller.traininginfo.dto.TrainingDateDto;
-import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDate;
-import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDateMapper;
-import com.bcs.trainingwebsite.persistance.trainingdate.TrainingDateRepository;
+import com.bcs.trainingwebsite.persistence.trainingdate.TrainingDate;
+import com.bcs.trainingwebsite.persistence.trainingdate.TrainingDateMapper;
+import com.bcs.trainingwebsite.persistence.trainingdate.TrainingDateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

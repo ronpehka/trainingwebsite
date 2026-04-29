@@ -4,22 +4,23 @@ import com.bcs.trainingwebsite.controller.registration.dto.CoachProfileDto;
 import com.bcs.trainingwebsite.controller.registration.dto.CustomerProfile;
 import com.bcs.trainingwebsite.infrastructure.exception.ForbiddenException;
 import com.bcs.trainingwebsite.infrastructure.exception.ForeignKeyNotFoundException;
-import com.bcs.trainingwebsite.persistance.coachimage.CoachImage;
-import com.bcs.trainingwebsite.persistance.coachimage.CoachImageMapper;
-import com.bcs.trainingwebsite.persistance.coachimage.CoachImageRepository;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSport;
-import com.bcs.trainingwebsite.persistance.coachsport.CoachSportRepository;
-import com.bcs.trainingwebsite.persistance.profile.Profile;
-import com.bcs.trainingwebsite.persistance.profile.ProfileMapper;
-import com.bcs.trainingwebsite.persistance.profile.ProfileRepository;
-import com.bcs.trainingwebsite.persistance.role.Role;
-import com.bcs.trainingwebsite.persistance.role.RoleRepository;
-import com.bcs.trainingwebsite.persistance.sport.Sport;
-import com.bcs.trainingwebsite.persistance.sport.SportRepository;
-import com.bcs.trainingwebsite.persistance.user.User;
-import com.bcs.trainingwebsite.persistance.user.UserMapper;
-import com.bcs.trainingwebsite.persistance.user.UserRepository;
+import com.bcs.trainingwebsite.persistence.coachimage.CoachImage;
+import com.bcs.trainingwebsite.persistence.coachimage.CoachImageMapper;
+import com.bcs.trainingwebsite.persistence.coachimage.CoachImageRepository;
+import com.bcs.trainingwebsite.persistence.coachsport.CoachSport;
+import com.bcs.trainingwebsite.persistence.coachsport.CoachSportRepository;
+import com.bcs.trainingwebsite.persistence.profile.Profile;
+import com.bcs.trainingwebsite.persistence.profile.ProfileMapper;
+import com.bcs.trainingwebsite.persistence.profile.ProfileRepository;
+import com.bcs.trainingwebsite.persistence.role.Role;
+import com.bcs.trainingwebsite.persistence.role.RoleRepository;
+import com.bcs.trainingwebsite.persistence.sport.Sport;
+import com.bcs.trainingwebsite.persistence.sport.SportRepository;
+import com.bcs.trainingwebsite.persistence.user.User;
+import com.bcs.trainingwebsite.persistence.user.UserMapper;
+import com.bcs.trainingwebsite.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class RegistrationService {
     private final CoachImageMapper coachImageMapper;
     private final CoachSportRepository coachSportRepository;
     private final SportRepository sportRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public void addNewCustomer(CustomerProfile customerProfile) {
@@ -103,6 +105,7 @@ public class RegistrationService {
         Role roleCustomer = roleRepository.findById(CUSTOMER).get();
         User user = userMapper.toUser(customerProfile);
         user.setRole(roleCustomer);
+        user.setPassword(passwordEncoder.encode(customerProfile.getPassword()));
         userRepository.save(user);
         return user;
     }
@@ -111,6 +114,7 @@ public class RegistrationService {
         Role roleCoach = roleRepository.findById(COACH).get();
         User user = userMapper.toCoach(coachProfileDto);
         user.setRole(roleCoach);
+        user.setPassword(passwordEncoder.encode(coachProfileDto.getPassword()));
         userRepository.save(user);
         handleAddCoachImageData(user, coachProfileDto);
         return user;
